@@ -1,0 +1,10 @@
+dependencies:
+  - name: d3
+    version: 3.5.5
+    src: htmlwidgets/lib/d3
+    script: d3.js
+  - name: chorddiag
+    version: 0.0.0.9000
+    src: htmlwidgets
+    script: chorddiag.js
+    stylesheet: chorddiag.css

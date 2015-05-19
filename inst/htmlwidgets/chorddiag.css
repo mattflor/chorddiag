@@ -1,0 +1,10 @@
+body {
+	font: 10px sans-serif;
+	text-align: center
+}
+
+.chord path {
+    fill-opacity: .67;
+    stroke: #808080;
+    stroke-width: .5px;
+}
