@@ -5,7 +5,6 @@ HTMLWidgets.widget({
   type: 'output',
 
   initialize: function(el, width, height) {
-    //return {};
 
     d3.select(el).append("svg")
         .attr("width", width)
@@ -17,8 +16,6 @@ HTMLWidgets.widget({
   },
 
   resize: function(el, width, height, instance) {
-    //if (instance.params)
-      //this.drawGraphic(el, instance.params, width, height);
 
     d3.select(el).select("svg")
       .attr("width", width)
@@ -32,15 +29,6 @@ HTMLWidgets.widget({
 
     // save params for reference from resize method
     instance.params = params;
-
-    /*
-    // draw the graphic
-    this.drawGraphic(el, x, el.offsetWidth, el.offsetHeight);
-
-  },
-
-  drawGraphic: function(el, x, width, height) {
-  */
 
     var matrix = params.matrix,
         options = params.options;
@@ -66,7 +54,8 @@ HTMLWidgets.widget({
 
     var svg = d3.select(el).selectAll("g");
 
-    svg.append("g").selectAll("path")
+    svg.append("g").attr("class", "group")
+        .selectAll("path")
         .data(chord.groups)
         .enter().append("path")
         .style("fill", function(d) { return fill(d.index); })
@@ -75,7 +64,7 @@ HTMLWidgets.widget({
         .on("mouseover", fade(.1))
         .on("mouseout", fade(1));
 
-    var ticks = svg.append("g").selectAll("g")
+    var ticks = svg.append("g").attr("class", "ticks").selectAll("g")
         .data(chord.groups)
         .enter().append("g").selectAll("g")
         .data(groupTicks)
@@ -99,14 +88,15 @@ HTMLWidgets.widget({
         .style("text-anchor", function(d) { return d.angle > Math.PI ? "end" : null; })
         .text(function(d) { return d.label; });
 
-    svg.append("g")
-        .attr("class", "chord")
+    svg.append("g").attr("class", "chord")
         .selectAll("path")
         .data(chord.chords)
         .enter().append("path")
         .attr("d", d3.svg.chord().radius(innerRadius))
         .style("fill", function(d) { return fill(d.target.index); })
-        .style("opacity", 1);
+        .style("opacity", 1)
+        .on("mouseover", fade(.1))
+        .on("mouseout", fade(1));
 
     // Returns an array of tick angles and labels, given a group.
     function groupTicks(d) {
@@ -129,30 +119,42 @@ HTMLWidgets.widget({
       };
     }
 
-    // !!!essai pour ajouter un titre !!! perso
-    var noms = svg.append("g").selectAll("g")
+    // Returns an event handler for fading a given group name.
+    function fade2(opacity) {
+      return function(g, i) {
+        svg.selectAll(".chord path")
+            .filter(function(d) { return d.source.index != i &&
+                                         d.target.index != i;
+            })
+            .transition()
+            .style("opacity", opacity);
+      };
+    }
+
+
+    // Add group names.
+    var names = svg.append("g").attr("class", "name").selectAll("g")
         .data(chord.groups)
         .enter().append("g").selectAll("g")
-        .data(groupNoms)
+        .data(groupNames)
         .enter().append("g")
         .attr("transform", function(d) {
           return "rotate(" + (d.angle * 180 / Math.PI - 90) + ")"
               + "translate(" + (outerRadius + groupnamePadding) + ", 0)";
-        })
+        });
 
-    noms.append("text")
+    names.append("text")
         .attr("x", 25)
         .attr("dy", ".35em")
     	.style("font-size", "18px")
         .attr("transform", function(d) { return d.angle > Math.PI ? "rotate(180)translate(-50)" : null; })
         .style("text-anchor", function(d) { return d.angle > Math.PI ? "end" : null; })
         .text(function(d) { return d.label; })
-        .attr("d", arc)
-        .on("mouseover", fade(.1))
-        .on("mouseout", fade(1));
+        .on("mouseover", fade2(.1))
+        .on("mouseout", fade2(1));
 
-    function groupNoms(d) {
-      return d3.range(0, d.value, 100).map(function(v, i) {	//sais pas comment le faire une seule fois ???
+    function groupNames(d) {
+      return d3.range(0, d.value, 100).map(function(v, i) {
         return {
           angle: (d.startAngle + d.endAngle) / 2,
           label: i ? null : groupnames[d.index]
