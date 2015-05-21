@@ -7,22 +7,35 @@
 #' @export
 chorddiag <- function(data, groupcolors = NULL,
                       tickInterval = 100,
-                      groupnamePadding = 0,
+                      padding = list(groups = 0.05,
+                                     groupnames = NULL),
+#                       groupnamePadding = 0,
+                      fontsize = list(groupnames = 18,
+                                      ticklabels = 10),
                       width = NULL, height = NULL) {
 
     if (!is.matrix(data))
         stop("'data' must be a matrix class object.")
     groupnames <- colnames(data)
 
+    d <- dim(data)
+    if (d[1] != d[2] )
+        stop("'data' must be a square matrix.")
+    n <- d[1]
+
+    if (is.null(groupcolors)) {
+        groupcolors <- RColorBrewer::brewer.pal(n, "Set2")
+    }
+
     params = list(matrix = data,
                   options = list(groupnames = groupnames,
                                  groupcolors = groupcolors,
                                  tickInterval = tickInterval,
-                                 groupnamePadding = groupnamePadding,
+#                                  groupnamePadding = groupnamePadding,
+                                 fontsize = fontsize,
+                                 padding = padding,
                                  height = height,
-                                 width = width),
-                  width = width,
-                  height = height)
+                                 width = width))
     params = Filter(Negate(is.null), params)
 
     # create widget
@@ -31,8 +44,9 @@ chorddiag <- function(data, groupcolors = NULL,
         params,
         width = width,
         height = height,
-        htmlwidgets::sizingPolicy(viewer.padding = 10,
-                                  browser.fill = TRUE),
+        htmlwidgets::sizingPolicy(),
+#         htmlwidgets::sizingPolicy(viewer.padding = 10,
+#                                   browser.fill = TRUE),
         package = 'chorddiag'
     )
 }

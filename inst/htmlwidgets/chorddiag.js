@@ -21,8 +21,6 @@ HTMLWidgets.widget({
       .attr("width", width)
       .attr("height", height);
 
-    //instance.size([width, height]).resume();
-
   },
 
   renderValue: function(el, params, instance) {
@@ -36,19 +34,26 @@ HTMLWidgets.widget({
     var groupnames = options.groupnames,
         groupcolors = options.groupcolors,
         tickInterval = options.tickInterval,
-        groupnamePadding = options.groupnamePadding;
+        padding = options.padding,
+        //groupnamePadding = options.groupnamePadding,
+        fontsize = options.fontsize;
 
     //var chord = d3.layout.chord();
     // Use provided instance as chord.
     var chord = instance;
 
-    chord.padding(0.05)
+    chord.padding(padding.groups)
          .sortSubgroups(d3.descending)
          .matrix(matrix);
 
-    var width = 500,
-        height = 500,
-        innerRadius = Math.min(width, height) * 0.31,
+    /*var width = 500,
+        height = 500,*/
+    // get the width and height
+    var width = Math.max(options.width, 500),
+        height = Math.max(options.height, 500),
+        //height = el.offsetHeight,
+        //innerRadius = Math.min(width, height) * 0.31,
+        innerRadius = Math.min(width, height) / 2 - 100,
         outerRadius = innerRadius * 1.1;
 
     // Create ordinal color fill scale from groupColors.
@@ -94,6 +99,7 @@ HTMLWidgets.widget({
     ticks.append("text")
          .attr("x", 8)
          .attr("dy", ".35em")
+         .style("font-size", fontsize.ticklabels + "px")
          .attr("transform", function(d) { return d.angle > Math.PI ? "rotate(180)translate(-16)" : null; })
          .style("text-anchor", function(d) { return d.angle > Math.PI ? "end" : null; })
          .text(function(d) { return d.label; });
@@ -122,14 +128,14 @@ HTMLWidgets.widget({
                    .enter().append("g")
                    .attr("transform", function(d) {
                        return "rotate(" + (d.angle * 180 / Math.PI - 90) + ")"
-                            + "translate(" + (outerRadius + groupnamePadding) + ", 0)";
+                            + "translate(" + (outerRadius + padding.groupnames) + ", 0)";
                        });
 
     // Add group name labels.
     names.append("text")
         .attr("x", 25)
         .attr("dy", ".35em")
-        .style("font-size", "18px")
+        .style("font-size", fontsize.groupnames + "px")
         .attr("transform", function(d) { return d.angle > Math.PI ? "rotate(180)translate(-50)" : null; })
         .style("text-anchor", function(d) { return d.angle > Math.PI ? "end" : null; })
         .text(function(d) { return d.label; })

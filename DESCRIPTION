@@ -7,4 +7,5 @@ Description: Interactive Chord Diagrams via D3
 Depends: R (>= 3.2.0)
 License: GPL (>= 3)
 LazyData: true
-Imports: htmlwidgets
+Imports: htmlwidgets,
+    RColorBrewer
