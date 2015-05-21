@@ -7,10 +7,10 @@ HTMLWidgets.widget({
   initialize: function(el, width, height) {
 
     d3.select(el).append("svg")
-        .attr("width", width)
-        .attr("height", height)
-        .append("g")
-        .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+      .attr("width", width)
+      .attr("height", height)
+      .append("g")
+      .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
 
     return d3.layout.chord();
   },
@@ -21,7 +21,7 @@ HTMLWidgets.widget({
       .attr("width", width)
       .attr("height", height);
 
-      //chord.size([width, height]).resume();
+    //instance.size([width, height]).resume();
 
   },
 
@@ -38,65 +38,102 @@ HTMLWidgets.widget({
         tickInterval = options.tickInterval,
         groupnamePadding = options.groupnamePadding;
 
-    var chord = d3.layout.chord()
-        .padding(0.05)
-        .sortSubgroups(d3.descending)
-        .matrix(matrix);
+    //var chord = d3.layout.chord();
+    // Use provided instance as chord.
+    var chord = instance;
+
+    chord.padding(0.05)
+         .sortSubgroups(d3.descending)
+         .matrix(matrix);
 
     var width = 500,
         height = 500,
         innerRadius = Math.min(width, height) * 0.31,
         outerRadius = innerRadius * 1.1;
 
-    var fill = d3.scale.ordinal()
-        .domain(d3.range(matrix.length))
-        .range(groupcolors);
+    // Create ordinal color fill scale from groupColors.
+    var fillScale = d3.scale.ordinal()
+                            .domain(d3.range(matrix.length))
+                            .range(groupcolors);
 
     var svg = d3.select(el).selectAll("g");
 
-    svg.append("g").attr("class", "group")
-        .selectAll("path")
-        .data(chord.groups)
-        .enter().append("path")
-        .style("fill", function(d) { return fill(d.index); })
-        .style("stroke", function(d) { return fill(d.index); })
-        .attr("d", d3.svg.arc().innerRadius(innerRadius).outerRadius(outerRadius))
-        .on("mouseover", fade(0.1))
-        .on("mouseout", fade(1));
+    // Create groups.
+    var groups = svg.append("g").attr("class", "group")
+                                .selectAll("path")
+                                .data(chord.groups)
+                                .enter().append("path");
 
-    var ticks = svg.append("g").attr("class", "ticks").selectAll("g")
+    // Style groups and define mouse events.
+    groups.style("fill", function(d) { return fillScale(d.index); })
+          .style("stroke", function(d) { return fillScale(d.index); })
+          .attr("d", d3.svg.arc().innerRadius(innerRadius).outerRadius(outerRadius))
+          .on("mouseover", fade(0.1))
+          .on("mouseout", fade(1))
+
+    // Create ticks for groups.
+    var ticks = svg.append("g").attr("class", "tick").selectAll("g")
         .data(chord.groups)
         .enter().append("g").selectAll("g")
         .data(groupTicks)
         .enter().append("g")
         .attr("transform", function(d) {
-          return "rotate(" + (d.angle * 180 / Math.PI - 90) + ")"
-              + "translate(" + outerRadius + ",0)";
-        });
+            return "rotate(" + (d.angle * 180 / Math.PI - 90) + ")"
+                 + "translate(" + outerRadius + ",0)";
+            });
 
+    // Add tick marks.
     ticks.append("line")
-        .attr("x1", 1)
-        .attr("y1", 0)
-        .attr("x2", 5)
-        .attr("y2", 0)
-        .style("stroke", "#000");
+         .attr("x1", 1)
+         .attr("y1", 0)
+         .attr("x2", 5)
+         .attr("y2", 0)
+         .style("stroke", "#000");
 
+    // Add tick labels.
     ticks.append("text")
-        .attr("x", 8)
-        .attr("dy", ".35em")
-        .attr("transform", function(d) { return d.angle > Math.PI ? "rotate(180)translate(-16)" : null; })
-        .style("text-anchor", function(d) { return d.angle > Math.PI ? "end" : null; })
-        .text(function(d) { return d.label; });
+         .attr("x", 8)
+         .attr("dy", ".35em")
+         .attr("transform", function(d) { return d.angle > Math.PI ? "rotate(180)translate(-16)" : null; })
+         .style("text-anchor", function(d) { return d.angle > Math.PI ? "end" : null; })
+         .text(function(d) { return d.label; });
 
-    svg.append("g").attr("class", "chord")
-        .selectAll("path")
-        .data(chord.chords)
-        .enter().append("path")
-        .attr("d", d3.svg.chord().radius(innerRadius))
-        .style("fill", function(d) { return fill(d.target.index); })
-        .style("opacity", 1)
-        .on("mouseover", fade(0.1))
-        .on("mouseout", fade(1));
+    // Create chords.
+    var chords = svg.append("g").attr("class", "chord")
+                    .selectAll("path")
+                    .data(chord.chords)
+                    .enter().append("path")
+                    .attr("d", d3.svg.chord().radius(innerRadius));
+
+    // Style chords and define mouse events.
+    chords.style("fill", function(d) { return fillScale(d.target.index); })
+          .style("opacity", 1)
+          .on("mouseover", fade2(0.1))
+          .on("mouseout", fade2(1))
+
+    // Create group names.
+    var names = svg.append("g").attr("class", "name").selectAll("g")
+                   .data(chord.groups)
+                   .enter().append("g")
+                   .on("mouseover", fade(0.1))
+                   .on("mouseout", fade(1))
+                   .selectAll("g")
+                   .data(groupNames)
+                   .enter().append("g")
+                   .attr("transform", function(d) {
+                       return "rotate(" + (d.angle * 180 / Math.PI - 90) + ")"
+                            + "translate(" + (outerRadius + groupnamePadding) + ", 0)";
+                       });
+
+    // Add group name labels.
+    names.append("text")
+        .attr("x", 25)
+        .attr("dy", ".35em")
+        .style("font-size", "18px")
+        .attr("transform", function(d) { return d.angle > Math.PI ? "rotate(180)translate(-50)" : null; })
+        .style("text-anchor", function(d) { return d.angle > Math.PI ? "end" : null; })
+        .text(function(d) { return d.label; })
+        .attr("id", function(d) { return d.label; });
 
     // Returns an array of tick angles and labels, given a group.
     function groupTicks(d) {
@@ -109,50 +146,6 @@ HTMLWidgets.widget({
       });
     }
 
-    // Returns an event handler for fading a given chord group.
-    function fade(opacity) {
-      return function(g, i) {
-        svg.selectAll(".chord path")
-            .filter(function(d) { return d.source.index != i && d.target.index != i; })
-            .transition()
-            .style("opacity", opacity);
-      };
-    }
-
-    // Returns an event handler for fading a given group name.
-    function fade2(opacity) {
-      return function(g, i) {
-        svg.selectAll(".chord path")
-            .filter(function(d) { return d.source.index != i &&
-                                         d.target.index != i;
-            })
-            .transition()
-            .style("opacity", opacity);
-      };
-    }
-
-
-    // Add group names.
-    var names = svg.append("g").attr("class", "name").selectAll("g")
-        .data(chord.groups)
-        .enter().append("g").selectAll("g")
-        .data(groupNames)
-        .enter().append("g")
-        .attr("transform", function(d) {
-          return "rotate(" + (d.angle * 180 / Math.PI - 90) + ")"
-              + "translate(" + (outerRadius + groupnamePadding) + ", 0)";
-        });
-
-    names.append("text")
-        .attr("x", 25)
-        .attr("dy", ".35em")
-    	.style("font-size", "18px")
-        .attr("transform", function(d) { return d.angle > Math.PI ? "rotate(180)translate(-50)" : null; })
-        .style("text-anchor", function(d) { return d.angle > Math.PI ? "end" : null; })
-        .text(function(d) { return d.label; })
-        .on("mouseover", fade2(0.1))
-        .on("mouseout", fade2(1));
-
     function groupNames(d) {
       return d3.range(0, d.value, 100).map(function(v, i) {
         return {
@@ -161,7 +154,33 @@ HTMLWidgets.widget({
         };
       });
     }
-  }
+
+    // Returns an event handler for fading all chords not belonging to a
+    // specific group.
+    function fade(opacity) {
+      return function(g, i) {
+        svg.selectAll(".chord path")
+            .filter(function(d) { return d.source.index != i
+                                      && d.target.index != i; })
+            .transition()
+            .style("opacity", opacity);
+      };
+    }
+
+    // Returns an event handler for fading all chords except for the one
+    // given.
+    function fade2(opacity) {
+      return function(g, i) {
+        svg.selectAll(".chord path")
+            .filter(function(d) { return d.source.index != g.source.index
+                                      || d.target.index != g.target.index;
+            })
+            .transition()
+            .style("opacity", opacity);
+      };
+    }
+
+  }  // end renderValue function
 
 });
 
