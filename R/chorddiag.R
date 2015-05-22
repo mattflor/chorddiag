@@ -2,7 +2,8 @@
 #'
 #' Create an interactive chord diagram using the JavaScript visualization
 #' library D3 (\url{http://d3js.org}). More specifically, the chord diagram
-#' layout is based on \url{http://bl.ocks.org/mbostock/4062006}
+#' layout is based on \url{http://bl.ocks.org/mbostock/4062006}. Chord diagrams
+#' show directed relationships among a group of entities.
 #'
 #' @import htmlwidgets
 #'
