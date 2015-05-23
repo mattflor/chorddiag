@@ -37,6 +37,8 @@ groupColors <- c("#000000", "#FFDD89", "#957244", "#F26223")
 chorddiag(m, groupColors = groupColors, groupnamePadding = 20)
 ```
 
+![chord diagram](README-chorddiagram.png)
+
 This package's code is based on <http://bl.ocks.org/mbostock/4062006>.
 
 Updating to the latest version of chorddiag
