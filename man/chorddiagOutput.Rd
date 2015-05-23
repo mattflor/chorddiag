@@ -4,7 +4,7 @@
 \alias{chorddiagOutput}
 \title{Widget output function for use in Shiny}
 \usage{
-chorddiagOutput(outputId, width = "100\%", height = "400px")
+chorddiagOutput(outputId, width = "90\%", height = "350px")
 }
 \description{
 Widget output function for use in Shiny

@@ -5,8 +5,6 @@
 #' layout is based on \url{http://bl.ocks.org/mbostock/4062006}. Chord diagrams
 #' show directed relationships among a group of entities.
 #'
-#' @import htmlwidgets
-#'
 #' @param data A square matrix containing the data. Column names (if existing)
 #'   will be used as group labels unless the \code{groupNames} argument is
 #'   explicitely set. labels must be set via \code{colnames}
@@ -114,7 +112,6 @@ chorddiag <- function(data,
         params,
         width = width,
         height = height,
-        # htmlwidgets::sizingPolicy(),
         htmlwidgets::sizingPolicy(padding = 0,
                                   browser.fill = TRUE),
         package = 'chorddiag'
@@ -124,8 +121,8 @@ chorddiag <- function(data,
 #' Widget output function for use in Shiny
 #'
 #' @export
-chorddiagOutput <- function(outputId, width = '100%', height = '400px'){
-    shinyWidgetOutput(outputId, 'chorddiag', width, height, package = 'chorddiag')
+chorddiagOutput <- function(outputId, width = '90%', height = '350px'){
+    htmlwidgets::shinyWidgetOutput(outputId, 'chorddiag', width, height, package = 'chorddiag')
 }
 
 #' Widget render function for use in Shiny
@@ -133,5 +130,5 @@ chorddiagOutput <- function(outputId, width = '100%', height = '400px'){
 #' @export
 renderChorddiag <- function(expr, env = parent.frame(), quoted = FALSE) {
     if (!quoted) { expr <- substitute(expr) } # force quoted
-    shinyRenderWidget(expr, chorddiagOutput, env, quoted = TRUE)
+    htmlwidgets::shinyRenderWidget(expr, chorddiagOutput, env, quoted = TRUE)
 }

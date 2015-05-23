@@ -3,4 +3,3 @@
 export(chorddiag)
 export(chorddiagOutput)
 export(renderChorddiag)
-import(htmlwidgets)
