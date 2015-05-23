@@ -14,15 +14,23 @@
 #'   eidth is automatically determined based on context).
 #' @param height Height for the chord diagram's frame area in pixels (if NULL
 #'   then height is automatically determined based on context).
+#' @param margin Numeric margin in pixels between the outer diagram radius and
+#'   the edge of the display.
 #' @param palette A character string. The name of the colorbrewer palette to be
 #'   used.
 #' @param groupNames A vector of character strings to be used for group
 #'   labeling.
 #' @param groupColors A vector of colors to be used for the groups. Providing
 #'   \code{groupColors} overrides any \code{palette} given.
-#' @param groupPadding A numeric.
-#' @param groupnamePadding A numeric.
+#' @param groupThickness Numeric thickness for the groups as a fraction of the
+#'   total diagram radius.
+#' @param groupPadding Numeric padding between groups.
+#' @param groupnamePadding Numeric padding between diagram and group labels. Use
+#'   this argument if group labels overlag with tick labels.
 #' @param groupnameFontsize Numeric font size in pixels for the group labels.
+#' @param groupedgeColor Color for the group edges. If NULL group colors will be
+#'   used.
+#' @param chordedgeColor Color for the chord edges.
 #' @param showTicks A logical scalar.
 #' @param tickInterval A numeric value.
 #' @param ticklabelFontsize Numeric font size in pixels for the tick labels.
@@ -44,10 +52,14 @@
 #' @export
 chorddiag <- function(data,
                       width = NULL, height = NULL,
+                      margin = 100,
                       palette = "Set2",
                       groupNames = NULL,
-                      groupColors = NULL, groupPadding = 0.05,
+                      groupColors = NULL, groupThickness = 0.1,
+                      groupPadding = 0.05,
                       groupnamePadding = NULL, groupnameFontsize = 18,
+                      groupedgeColor = NULL,
+                      chordedgeColor = "#808080",
                       showTicks = TRUE, tickInterval = NULL,
                       ticklabelFontsize = 10) {
 
@@ -82,11 +94,15 @@ chorddiag <- function(data,
 
     params = list(matrix = data,
                   options = list(width = width, height = height,
+                                 margin = margin,
                                  groupNames = groupNames,
                                  groupColors = groupColors,
+                                 groupThickness = groupThickness,
                                  groupPadding = groupPadding,
                                  groupnamePadding = groupnamePadding,
                                  groupnameFontsize = groupnameFontsize,
+                                 groupedgeColor = groupedgeColor,
+                                 chordedgeColor = chordedgeColor,
                                  showTicks = showTicks,
                                  tickInterval = tickInterval,
                                  ticklabelFontsize = ticklabelFontsize))
@@ -98,9 +114,9 @@ chorddiag <- function(data,
         params,
         width = width,
         height = height,
-        htmlwidgets::sizingPolicy(),
-#         htmlwidgets::sizingPolicy(viewer.padding = 10,
-#                                   browser.fill = TRUE),
+        # htmlwidgets::sizingPolicy(),
+        htmlwidgets::sizingPolicy(padding = 0,
+                                  browser.fill = TRUE),
         package = 'chorddiag'
     )
 }

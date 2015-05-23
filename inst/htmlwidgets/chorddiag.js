@@ -1,85 +1,99 @@
 HTMLWidgets.widget({
 
   name: 'chorddiag',
-
   type: 'output',
 
   initialize: function(el, width, height) {
 
     d3.select(el).append("svg")
-      .attr("width", width)
-      .attr("height", height)
-      .append("g")
-      .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+                 .attr("width", width)
+                 .attr("height", height);
 
     return d3.layout.chord();
+
   },
 
-  resize: function(el, width, height, instance) {
+  resize: function(el, width, height, chord) {
 
     d3.select(el).select("svg")
-      .attr("width", width)
-      .attr("height", height);
+                 .attr("width", width)
+                 .attr("height", height);
+
+    this.renderValue(el, chord.params, chord);
 
   },
 
-  renderValue: function(el, params, instance) {
+  renderValue: function(el, params, chord) {
 
     // save params for reference from resize method
-    instance.params = params;
+    chord.params = params;
 
     var matrix = params.matrix,
         options = params.options;
 
-    var groupNames = options.groupNames,
+    var svgContainer = d3.select(el).select("svg");
+    svgContainer.selectAll("*").remove();
+
+    // get width and height, calculate min for use in diagram size
+    var width = el.offsetWidth,
+        height = el.offsetHeight,
+        d = Math.min(width, height);
+
+    var margin = options.margin,
+        groupNames = options.groupNames,
         groupColors = options.groupColors,
+        groupThickness = options.groupThickness,
         groupPadding = options.groupPadding,
         groupnamePadding = options.groupnamePadding,
         groupnameFontsize = options.groupnameFontsize,
+        groupedgeColor = options.groupedgeColor,
+        chordedgeColor = options.chordedgeColor,
         showTicks = options.showTicks,
         tickInterval = options.tickInterval,
         ticklabelFontsize = options.ticklabelFontsize;
 
-    //var chord = d3.layout.chord();
-    // Use provided instance as chord.
-    var chord = instance;
-
+    // apply chord settings and data
     chord.padding(groupPadding)
          .sortSubgroups(d3.descending)
          .matrix(matrix);
 
-    /*var width = 500,
-        height = 500,*/
-    // get the width and height
-    var width = Math.max(options.width, 500),
-        height = Math.max(options.height, 500),
-        //height = el.offsetHeight,
-        //innerRadius = Math.min(width, height) * 0.31,
-        innerRadius = Math.min(width, height) / 2 - 100,
-        outerRadius = innerRadius * 1.1;
+    // calculate outer and inner radius for chord diagram
+    var outerRadius = (d - 2 * margin) / 2,
+        innerRadius = outerRadius * (1 - groupThickness);
 
-    // Create ordinal color fill scale from groupColors.
+    // create ordinal color fill scale from groupColors
     var fillScale = d3.scale.ordinal()
                             .domain(d3.range(matrix.length))
                             .range(groupColors);
 
-    var svg = d3.select(el).selectAll("g");
+    // calculate horizontal and vertical translation values
+    var xTranslate = Math.max(width / 2, outerRadius + margin),
+        yTranslate = Math.max(height / 2, outerRadius + margin);
 
-    // Create groups.
+    var svg = svgContainer.append("g");
+    svg.attr("transform", "translate(" + xTranslate + "," + yTranslate + ")");
+
+    // create groups
     var groups = svg.append("g").attr("class", "group")
                                 .selectAll("path")
                                 .data(chord.groups)
                                 .enter().append("path");
 
-    // Style groups and define mouse events.
+    // style groups and define mouse events
     groups.style("fill", function(d) { return fillScale(d.index); })
           .style("stroke", function(d) { return fillScale(d.index); })
           .attr("d", d3.svg.arc().innerRadius(innerRadius).outerRadius(outerRadius))
           .on("mouseover", fade(0.1))
-          .on("mouseout", fade(1))
+          .on("mouseout", fade(1));
+
+    if (groupedgeColor) {
+        groups.style("stroke", groupedgeColor);
+    } else {
+        groups.style("stroke", function(d) { return fillScale(d.index); });
+    }
 
     if (showTicks) {
-        // Create ticks for groups.
+        // create ticks for groups
         var ticks = svg.append("g").attr("class", "tick").selectAll("g")
             .data(chord.groups)
             .enter().append("g").selectAll("g")
@@ -87,10 +101,10 @@ HTMLWidgets.widget({
             .enter().append("g")
             .attr("transform", function(d) {
                 return "rotate(" + (d.angle * 180 / Math.PI - 90) + ")"
-                     + "translate(" + outerRadius + ",0)";
+                     + "translate(" + outerRadius + ", 0)";
                 });
 
-        // Add tick marks.
+        // add tick marks
         ticks.append("line")
              .attr("x1", 1)
              .attr("y1", 0)
@@ -98,7 +112,7 @@ HTMLWidgets.widget({
              .attr("y2", 0)
              .style("stroke", "#000");
 
-        // Add tick labels.
+        // add tick labels
         ticks.append("text")
              .attr("x", 8)
              .attr("dy", ".35em")
@@ -106,22 +120,23 @@ HTMLWidgets.widget({
              .attr("transform", function(d) { return d.angle > Math.PI ? "rotate(180)translate(-16)" : null; })
              .style("text-anchor", function(d) { return d.angle > Math.PI ? "end" : null; })
              .text(function(d) { return d.label; });
-    };
+    }
 
-    // Create chords.
+    // create chords
     var chords = svg.append("g").attr("class", "chord")
                     .selectAll("path")
                     .data(chord.chords)
                     .enter().append("path")
                     .attr("d", d3.svg.chord().radius(innerRadius));
 
-    // Style chords and define mouse events.
+    // style chords and define mouse events
     chords.style("fill", function(d) { return fillScale(d.target.index); })
+          .style("stroke", chordedgeColor)
           .style("opacity", 1)
           .on("mouseover", fade2(0.1))
-          .on("mouseout", fade2(1))
+          .on("mouseout", fade2(1));
 
-    // Create group labels.
+    // create group labels
     var names = svg.append("g").attr("class", "name").selectAll("g")
                    .data(chord.groups)
                    .enter().append("g")
@@ -134,7 +149,6 @@ HTMLWidgets.widget({
                        return "rotate(" + (d.angle * 180 / Math.PI - 90) + ")"
                             + "translate(" + (outerRadius + groupnamePadding) + ", 0)";
                        });
-
     names.append("text")
         .attr("x", 25)
         .attr("dy", ".35em")
@@ -144,7 +158,7 @@ HTMLWidgets.widget({
         .text(function(d) { return d.label; })
         .attr("id", function(d) { return d.label; });
 
-    // Returns an array of tick angles and labels, given a group.
+    // returns an array of tick angles and labels, given a group
     function groupTicks(d) {
       var k = (d.endAngle - d.startAngle) / d.value;
       return d3.range(0, d.value, tickInterval).map(function(v, i) {
@@ -164,8 +178,8 @@ HTMLWidgets.widget({
       });
     }
 
-    // Returns an event handler for fading all chords not belonging to a
-    // specific group.
+    // returns an event handler for fading all chords not belonging to a
+    // specific group
     function fade(opacity) {
       return function(g, i) {
         svg.selectAll(".chord path")
@@ -176,8 +190,8 @@ HTMLWidgets.widget({
       };
     }
 
-    // Returns an event handler for fading all chords except for the one
-    // given.
+    // returns an event handler for fading all chords except for the one
+    // given
     function fade2(opacity) {
       return function(g, i) {
         svg.selectAll(".chord path")

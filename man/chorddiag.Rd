@@ -7,14 +7,17 @@
 \url{http://bl.ocks.org/mbostock/4062006}
 }
 \usage{
-chorddiag(data, width = NULL, height = NULL, palette = "Set2",
-  groupColors = NULL, groupPadding = 0.05, groupnamePadding = NULL,
-  groupnameFontsize = 18, showTicks = TRUE, tickInterval = NULL,
+chorddiag(data, width = NULL, height = NULL, margin = 100,
+  palette = "Set2", groupNames = NULL, groupColors = NULL,
+  groupThickness = 0.1, groupPadding = 0.05, groupnamePadding = NULL,
+  groupnameFontsize = 18, groupedgeColor = NULL,
+  chordedgeColor = "#808080", showTicks = TRUE, tickInterval = NULL,
   ticklabelFontsize = 10)
 }
 \arguments{
-\item{data}{A square matrix containing the data. Group names to be used as
-labels must be set via \code{colnames}}
+\item{data}{A square matrix containing the data. Column names (if existing)
+will be used as group labels unless the \code{groupNames} argument is
+explicitely set. labels must be set via \code{colnames}}
 
 \item{width}{Width for the chord diagram's frame area in pixels (if NULL then
 eidth is automatically determined based on context).}
@@ -22,17 +25,32 @@ eidth is automatically determined based on context).}
 \item{height}{Height for the chord diagram's frame area in pixels (if NULL
 then height is automatically determined based on context).}
 
+\item{margin}{Numeric margin in pixels between the outer diagram radius and
+the edge of the display.}
+
 \item{palette}{A character string. The name of the colorbrewer palette to be
 used.}
 
-\item{groupColors}{A vector of colors to be used for the groups. If provided
-overwrites the palette.}
+\item{groupNames}{A vector of character strings to be used for group
+labeling.}
 
-\item{groupPadding}{A numeric.}
+\item{groupColors}{A vector of colors to be used for the groups. Providing
+\code{groupColors} overrides any \code{palette} given.}
 
-\item{groupnamePadding}{A numeric.}
+\item{groupThickness}{Numeric thickness for the groups as a fraction of the
+total diagram radius.}
+
+\item{groupPadding}{Numeric padding between groups.}
+
+\item{groupnamePadding}{Numeric padding between diagram and group labels. Use
+this argument if group labels overlag with tick labels.}
 
 \item{groupnameFontsize}{Numeric font size in pixels for the group labels.}
+
+\item{groupedgeColor}{Color for the group edges. If NULL group colors will be
+used.}
+
+\item{chordedgeColor}{Color for the chord edges.}
 
 \item{showTicks}{A logical scalar.}
 
@@ -43,7 +61,8 @@ overwrites the palette.}
 \description{
 Create an interactive chord diagram using the JavaScript visualization
 library D3 (\url{http://d3js.org}). More specifically, the chord diagram
-layout is based on \url{http://bl.ocks.org/mbostock/4062006}
+layout is based on \url{http://bl.ocks.org/mbostock/4062006}. Chord diagrams
+show directed relationships among a group of entities.
 }
 \examples{
 m <- matrix(c(11975,  5871, 8916, 2868,
