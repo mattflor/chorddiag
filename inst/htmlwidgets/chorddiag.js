@@ -51,7 +51,7 @@ HTMLWidgets.widget({
         showTooltips = options.showTooltips,
         tooltipUnit = options.tooltipUnit,
         tooltipTo = options.tooltipTo,
-        tooltipFro = options.tooltipFro
+        tooltipFro = options.tooltipFro,
         precision = options.precision;
 
     d3.select(el).selectAll("div.d3-tip").remove();
@@ -103,7 +103,7 @@ HTMLWidgets.widget({
         yTranslate = Math.max(height / 2, outerRadius + margin);
 
     var svg = svgContainer.append("g");
-    svg.attr("transform", "translate(" + xTranslate + "," + yTranslate + ")")
+    svg.attr("transform", "translate(" + xTranslate + "," + yTranslate + ")");
 
     if (showTooltips) {
        svg.call(chordTip)
@@ -121,9 +121,11 @@ HTMLWidgets.widget({
           .style("stroke", function(d) { return fillScale(d.index); })
           .attr("d", d3.svg.arc().innerRadius(innerRadius).outerRadius(outerRadius))
           .on("mouseover", function(d) {
+              //groupFade(d, 0.2);
               if (showTooltips) return groupTip.show(d);
           })
           .on("mouseout", function(d) {
+              //groupFade(d, 1);
               if (showTooltips) return groupTip.hide(d);
           });
 
@@ -188,8 +190,8 @@ HTMLWidgets.widget({
     var names = svg.append("g").attr("class", "name").selectAll("g")
                    .data(chord.groups)
                    .enter().append("g")
-                   .on("mouseover", fade(0.1))
-                   .on("mouseout", fade(1))
+                   .on("mouseover", groupFade(0.1))
+                   .on("mouseout", groupFade(1))
                    .selectAll("g")
                    .data(groupLabels)
                    .enter().append("g")
@@ -229,19 +231,19 @@ HTMLWidgets.widget({
 
     // returns an event handler for fading all chords not belonging to a
     // specific group
-    function fade(opacity) {
+    function groupFade(opacity) {
       return function(g, i) {
         svg.selectAll(".chord path")
             .filter(function(d) { return d.source.index != i
                                       && d.target.index != i; })
             .transition()
-            .style("opacity", opacity)
+            .style("opacity", opacity);
       };
     }
 
     // returns an event handler for fading all chords except for the one
     // given
-    function fade2(opacity) {
+    function chordFade(opacity) {
       return function(g, i) {
         svg.selectAll(".chord path")
             .filter(function(d) { return d.source.index != g.source.index

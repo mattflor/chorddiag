@@ -12,7 +12,8 @@ chorddiag(data, width = NULL, height = NULL, margin = 100,
   groupThickness = 0.1, groupPadding = 0.05, groupnamePadding = NULL,
   groupnameFontsize = 18, groupedgeColor = NULL,
   chordedgeColor = "#808080", showTicks = TRUE, tickInterval = NULL,
-  ticklabelFontsize = 10)
+  ticklabelFontsize = 10, showTooltips = TRUE, tooltipUnit = NULL,
+  tooltipTo = " &#x25B6; ", tooltipFro = " &#x25C0; ", precision = 0)
 }
 \arguments{
 \item{data}{A square matrix containing the data. Column names (if existing)
@@ -57,6 +58,18 @@ used.}
 \item{tickInterval}{A numeric value.}
 
 \item{ticklabelFontsize}{Numeric font size in pixels for the tick labels.}
+
+\item{showTooltips}{A logical scalar.}
+
+\item{tooltipUnit}{A character string for the units to be used in tooltips.}
+
+\item{tooltipTo}{A character string to be used in tooltips: "<source name> <tooltipTo> <target name>". Defaults to a triangle pointing from source to target.}
+
+\item{tooltipFro}{A character string to be used in tooltips: "<target name> <tooltipFro> <source name>". Defaults to a triangle pointing from target to source.}
+
+\item{precision}{Integer number of digits after the decimal point. Only used for tooltip display.}
+
+\item{tooltipType}{A character string, either "oneway" or "twoway".}
 }
 \description{
 Create an interactive chord diagram using the JavaScript visualization
