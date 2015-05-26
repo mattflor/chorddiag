@@ -31,9 +31,6 @@ HTMLWidgets.widget({
     var matrix = params.matrix,
         options = params.options;
 
-    var svgContainer = d3.select(el).select("svg");
-    svgContainer.selectAll("*").remove();
-
     // get width and height, calculate min for use in diagram size
     var width = el.offsetWidth,
         height = el.offsetHeight,
@@ -50,7 +47,42 @@ HTMLWidgets.widget({
         chordedgeColor = options.chordedgeColor,
         showTicks = options.showTicks,
         tickInterval = options.tickInterval,
-        ticklabelFontsize = options.ticklabelFontsize;
+        ticklabelFontsize = options.ticklabelFontsize,
+        showTooltips = options.showTooltips,
+        tooltipUnit = options.tooltipUnit,
+        tooltipTo = options.tooltipTo,
+        tooltipFro = options.tooltipFro
+        precision = options.precision;
+
+    d3.select(el).selectAll("div.d3-tip").remove();
+
+    if (showTooltips) {
+        var chordTip = d3.tip()
+                         .attr('class', 'd3-tip')
+                         .direction('ne')
+                         .offset([0, 0])
+                         .html(function(d) {
+                             // indexes
+                             var i = d.source.index,
+                                 j = d.target.index;
+                             // values
+                             var vij = matrix[i][j].toFixed(precision),
+                                 vji = matrix[j][i].toFixed(precision);
+                             var dir1 = groupNames[i] + tooltipTo + groupNames[j] + ": " + vij + tooltipUnit,
+                                 dir2 = groupNames[j] + tooltipFro + groupNames[i] + ": " + vji + tooltipUnit;
+                             return dir1 + "</br>" + dir2;
+                         });
+
+        var groupTip = d3.tip()
+                         .attr('class', 'd3-tip')
+                         .html(function(d) {
+                             var value = d.value.toFixed(precision);
+                             return groupNames[d.index] + " (total): " + value + tooltipUnit;
+                         });
+    }
+
+    var svgContainer = d3.select(el).select("svg");
+    svgContainer.selectAll("*").remove();
 
     // apply chord settings and data
     chord.padding(groupPadding)
@@ -71,7 +103,12 @@ HTMLWidgets.widget({
         yTranslate = Math.max(height / 2, outerRadius + margin);
 
     var svg = svgContainer.append("g");
-    svg.attr("transform", "translate(" + xTranslate + "," + yTranslate + ")");
+    svg.attr("transform", "translate(" + xTranslate + "," + yTranslate + ")")
+
+    if (showTooltips) {
+       svg.call(chordTip)
+          .call(groupTip);
+    }
 
     // create groups
     var groups = svg.append("g").attr("class", "group")
@@ -83,8 +120,12 @@ HTMLWidgets.widget({
     groups.style("fill", function(d) { return fillScale(d.index); })
           .style("stroke", function(d) { return fillScale(d.index); })
           .attr("d", d3.svg.arc().innerRadius(innerRadius).outerRadius(outerRadius))
-          .on("mouseover", fade(0.1))
-          .on("mouseout", fade(1));
+          .on("mouseover", function(d) {
+              if (showTooltips) return groupTip.show(d);
+          })
+          .on("mouseout", function(d) {
+              if (showTooltips) return groupTip.hide(d);
+          });
 
     if (groupedgeColor) {
         groups.style("stroke", groupedgeColor);
@@ -135,9 +176,13 @@ HTMLWidgets.widget({
           .style("stroke", chordedgeColor)
           .style("fill-opacity", 0.67)
           .style("stroke-width", "0.5px")
-          //.style("opacity", 1)
-          .on("mouseover", fade2(0.1))
-          .on("mouseout", fade2(1));
+          .style("opacity", 1)
+          .on("mouseover", function(d) {
+              if (showTooltips) return chordTip.show(d);
+          }) //fade2(0.1))
+          .on("mouseout", function(d) {
+              if (showTooltips) return chordTip.hide(d);
+          }); //fade2(1));
 
     // create group labels
     var names = svg.append("g").attr("class", "name").selectAll("g")
@@ -190,7 +235,7 @@ HTMLWidgets.widget({
             .filter(function(d) { return d.source.index != i
                                       && d.target.index != i; })
             .transition()
-            .style("opacity", opacity);
+            .style("opacity", opacity)
       };
     }
 

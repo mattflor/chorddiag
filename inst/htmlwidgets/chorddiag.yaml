@@ -3,6 +3,10 @@ dependencies:
     version: 3.5.5
     src: htmlwidgets/lib/d3
     script: d3.min.js
+  - name: d3-tip
+    version: 0.6.7
+    src: htmlwidgets/lib/d3-tip
+    script: index.js
   - name: chorddiag
     version: 0.0.0.9000
     src: htmlwidgets
