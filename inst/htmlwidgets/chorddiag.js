@@ -117,7 +117,7 @@ HTMLWidgets.widget({
              .attr("x", 8)
              .attr("dy", ".35em")
              .style("font-size", ticklabelFontsize + "px")
-             .style("font-family", "sans-serif")
+             //.style("font-family", "sans-serif")
              .attr("transform", function(d) { return d.angle > Math.PI ? "rotate(180)translate(-16)" : null; })
              .style("text-anchor", function(d) { return d.angle > Math.PI ? "end" : null; })
              .text(function(d) { return d.label; });
@@ -156,7 +156,7 @@ HTMLWidgets.widget({
         .attr("x", 25)
         .attr("dy", ".35em")
         .style("font-size", groupnameFontsize + "px")
-        .style("font-family", "sans-serif")
+        //.style("font-family", "sans-serif")
         .attr("transform", function(d) { return d.angle > Math.PI ? "rotate(180)translate(-50)" : null; })
         .style("text-anchor", function(d) { return d.angle > Math.PI ? "end" : null; })
         .text(function(d) { return d.label; })
