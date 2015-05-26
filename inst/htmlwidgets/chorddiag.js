@@ -117,6 +117,7 @@ HTMLWidgets.widget({
              .attr("x", 8)
              .attr("dy", ".35em")
              .style("font-size", ticklabelFontsize + "px")
+             .style("font-family", "sans-serif")
              .attr("transform", function(d) { return d.angle > Math.PI ? "rotate(180)translate(-16)" : null; })
              .style("text-anchor", function(d) { return d.angle > Math.PI ? "end" : null; })
              .text(function(d) { return d.label; });
@@ -132,7 +133,9 @@ HTMLWidgets.widget({
     // style chords and define mouse events
     chords.style("fill", function(d) { return fillScale(d.target.index); })
           .style("stroke", chordedgeColor)
-          .style("opacity", 1)
+          .style("fill-opacity", 0.67)
+          .style("stroke-width", "0.5px")
+          //.style("opacity", 1)
           .on("mouseover", fade2(0.1))
           .on("mouseout", fade2(1));
 
@@ -153,6 +156,7 @@ HTMLWidgets.widget({
         .attr("x", 25)
         .attr("dy", ".35em")
         .style("font-size", groupnameFontsize + "px")
+        .style("font-family", "sans-serif")
         .attr("transform", function(d) { return d.angle > Math.PI ? "rotate(180)translate(-50)" : null; })
         .style("text-anchor", function(d) { return d.angle > Math.PI ? "end" : null; })
         .text(function(d) { return d.label; })
