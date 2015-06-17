@@ -1,7 +1,7 @@
 library(shiny)
 
 shinyUI(fluidPage(
-    titlePanel("A Chord Diagram"),
+    titlePanel("Hair Color Preferences"),
 
     sidebarLayout(
 
