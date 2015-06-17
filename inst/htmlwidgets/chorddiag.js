@@ -105,10 +105,10 @@ HTMLWidgets.widget({
     var svg = svgContainer.append("g");
     svg.attr("transform", "translate(" + xTranslate + "," + yTranslate + ")");
 
-    if (showTooltips) {
-       svg.call(chordTip)
-          .call(groupTip);
-    }
+    //if (showTooltips) {
+       //svg.call(chordTip)
+         // .call(groupTip);
+    //}
 
     // create groups
     var groups = svg.append("g").attr("class", "group")
@@ -120,6 +120,11 @@ HTMLWidgets.widget({
     groups.style("fill", function(d) { return fillScale(d.index); })
           .style("stroke", function(d) { return fillScale(d.index); })
           .attr("d", d3.svg.arc().innerRadius(innerRadius).outerRadius(outerRadius))
+          .call(d3.helper.tooltip()
+                .attr({class: function(d, i) { return d + ' ' +  i + ' A'; }})
+                .style({color: 'blue'})
+                .text(function(d, i){ return 'value: '+ d; })
+          )
           .on("mouseover", function(d) {
               groupFade(d, 0.2);
               if (showTooltips) return groupTip.show(d);
@@ -192,6 +197,11 @@ HTMLWidgets.widget({
     var names = svg.append("g").attr("class", "name").selectAll("g")
                    .data(chord.groups)
                    .enter().append("g")
+                   .call(d3.helper.tooltip()
+                        .attr({class: function(d, i) { return d + ' ' +  i + ' A'; }})
+                        .style({color: 'blue'})
+                        .text(function(d, i){ return 'value: '+ d; })
+                   )
                    .on("mouseover", groupFade(d, 0.1))
                    .on("mouseout", groupFade(d, 1))
                    .selectAll("g")

@@ -7,6 +7,10 @@ dependencies:
     version: 0.6.7
     src: htmlwidgets/lib/d3-tip
     script: index.js
+  - name: tooltip
+    version: 0.0.1
+    src: htmlwidgets/lib/tooltip
+    script: tooltip.js
   - name: chorddiag
     version: 0.0.0.9000
     src: htmlwidgets
