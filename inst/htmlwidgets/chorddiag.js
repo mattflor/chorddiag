@@ -59,7 +59,7 @@ HTMLWidgets.widget({
     if (showTooltips) {
         var chordTip = d3.tip()
                          .attr('class', 'd3-tip')
-                         .direction('ne')
+                         .direction('mt')
                          .offset([0, 0])
                          .html(function(d) {
                              // indexes
@@ -75,6 +75,8 @@ HTMLWidgets.widget({
 
         var groupTip = d3.tip()
                          .attr('class', 'd3-tip')
+                         .direction('mt')
+                         .offset([0, 0])
                          .html(function(d) {
                              var value = d.value.toFixed(precision);
                              return groupNames[d.index] + " (total): " + value + tooltipUnit;
@@ -105,10 +107,10 @@ HTMLWidgets.widget({
     var svg = svgContainer.append("g");
     svg.attr("transform", "translate(" + xTranslate + "," + yTranslate + ")");
 
-    //if (showTooltips) {
-       //svg.call(chordTip)
-         // .call(groupTip);
-    //}
+    if (showTooltips) {
+       svg.call(chordTip)
+          .call(groupTip);
+    }
 
     // create groups
     var groups = svg.append("g").attr("class", "group")
@@ -120,18 +122,13 @@ HTMLWidgets.widget({
     groups.style("fill", function(d) { return fillScale(d.index); })
           .style("stroke", function(d) { return fillScale(d.index); })
           .attr("d", d3.svg.arc().innerRadius(innerRadius).outerRadius(outerRadius))
-          .call(d3.helper.tooltip()
-                .attr({class: function(d, i) { return d + ' ' +  i + ' A'; }})
-                .style({color: 'blue'})
-                .text(function(d, i){ return 'value: '+ d; })
-          )
           .on("mouseover", function(d) {
-              groupFade(d, 0.2);
               if (showTooltips) return groupTip.show(d);
+              groupFade(d, 0.2);
           })
           .on("mouseout", function(d) {
-              groupFade(d, 1);
               if (showTooltips) return groupTip.hide(d);
+              groupFade(d, 1);
           });
 
     if (groupedgeColor) {
@@ -185,23 +182,18 @@ HTMLWidgets.widget({
           .style("stroke-width", "0.5px")
           .style("opacity", 1)
           .on("mouseover", function(d) {
+              if (showTooltips) { chordTip.show(d); }
               groupFade(d, 0.1);
-              if (showTooltips) { chordTip.show(d); };
           })
           .on("mouseout", function(d) {
+              if (showTooltips) { chordTip.hide(d); }
               groupFade(d, 1);
-              if (showTooltips) { chordTip.hide(d); };
           });
 
     // create group labels
     var names = svg.append("g").attr("class", "name").selectAll("g")
                    .data(chord.groups)
                    .enter().append("g")
-                   .call(d3.helper.tooltip()
-                        .attr({class: function(d, i) { return d + ' ' +  i + ' A'; }})
-                        .style({color: 'blue'})
-                        .text(function(d, i){ return 'value: '+ d; })
-                   )
                    .on("mouseover", groupFade(d, 0.1))
                    .on("mouseout", groupFade(d, 1))
                    .selectAll("g")
