@@ -36,9 +36,9 @@
 #' @param showTooltips A logical scalar.
 #' @param tooltipType A character string, either "oneway" or "twoway".
 #' @param tooltipUnit A character string for the units to be used in tooltips.
-#' @param tooltipTo A character string to be used in tooltips: "<source name> <tooltipTo> <target name>". Defaults to a triangle pointing from source to target.
-#' @param tooltipFro A character string to be used in tooltips: "<target name> <tooltipFro> <source name>". Defaults to a triangle pointing from target to source.
-#' @param precision Integer number of digits after the decimal point. Only used for tooltip display.
+#' @param tooltipST A character string to be used in tooltips: "<source group> <tooltipST> <target group>". Defaults to a triangle pointing from source to target.
+#' @param tooltipTS A character string to be used in tooltips: "<target group> <tooltipTS> <source group>". Defaults to a triangle pointing from source to target.
+#' @param precision Integer number of significant digits to be used for tooltip display.
 #'
 #' @source \url{http://bl.ocks.org/mbostock/4062006}
 #'
@@ -70,9 +70,9 @@ chorddiag <- function(data,
                       fadeLevel = 0.1,
                       showTooltips = TRUE,
                       tooltipUnit = NULL,
-                      tooltipTo = " &#x25B6; ",
-                      tooltipFro = " &#x25C0; ",
-                      precision = 0) {
+                      tooltipST = " &#x25B6; ",
+                      tooltipTS = " &#x25C0; ",
+                      precision = NULL) {
 
     if (!is.matrix(data))
         stop("'data' must be a matrix class object.")
@@ -107,6 +107,10 @@ chorddiag <- function(data,
         tooltipUnit <- ""
     }
 
+    if (is.null(precision)) {
+        precision <- "null"
+    }
+
     params = list(matrix = data,
                   options = list(width = width, height = height,
                                  margin = margin,
@@ -124,8 +128,8 @@ chorddiag <- function(data,
                                  fadeLevel = fadeLevel,
                                  showTooltips = showTooltips,
                                  tooltipUnit = tooltipUnit,
-                                 tooltipTo = tooltipTo,
-                                 tooltipFro = tooltipFro,
+                                 tooltipST = tooltipST,
+                                 tooltipTS = tooltipTS,
                                  precision = precision))
     params = Filter(Negate(is.null), params)
 

@@ -51,8 +51,8 @@ HTMLWidgets.widget({
         fadeLevel = options.fadeLevel,
         showTooltips = options.showTooltips,
         tooltipUnit = options.tooltipUnit,
-        tooltipTo = options.tooltipTo,
-        tooltipFro = options.tooltipFro,
+        tooltipST = options.tooltipST,
+        tooltipTS = options.tooltipTS,
         precision = options.precision;
 
     d3.select(el).selectAll("div.d3-tip").remove();
@@ -67,11 +67,19 @@ HTMLWidgets.widget({
                              var i = d.source.index,
                                  j = d.target.index;
                              // values
-                             var vij = matrix[i][j].toFixed(precision),
-                                 vji = matrix[j][i].toFixed(precision);
-                             var dir1 = groupNames[i] + tooltipTo + groupNames[j] + ": " + vij + tooltipUnit,
-                                 dir2 = groupNames[j] + tooltipFro + groupNames[i] + ": " + vji + tooltipUnit;
-                             return dir1 + "</br>" + dir2;
+                             var vij = sigFigs(matrix[i][j], precision),
+                                 vji = sigFigs(matrix[j][i], precision);
+                             /*if (precision != "null") {
+                                 vij = vij.toPrecision(precision);
+                                 vji = vji.toPrecision(precision);
+                             }*/
+                             var dir1 = groupNames[i] + tooltipST + groupNames[j] + ": " + vij + tooltipUnit,
+                                 dir2 = groupNames[i] + tooltipTS + groupNames[j] + ": " + vji + tooltipUnit;
+                             if (i == j) {
+                                 return dir1;
+                             } else {
+                                return dir1 + "</br>" + dir2;
+                             }
                          });
 
         var groupTip = d3.tip()
@@ -79,7 +87,14 @@ HTMLWidgets.widget({
                          .direction('mt')
                          .offset([0, 0])
                          .html(function(d) {
-                             var value = d.value.toFixed(precision);
+                             var value = sigFigs(d.value, precision);
+                             /*
+                             if (precision != "null") {
+                                //value = value.toPrecision(precision);
+                                value = sigFigs(value, precision);
+                             } else {
+                                 value = sigFigs(value);
+                             }*/
                              return groupNames[d.index] + " (total): " + value + tooltipUnit;
                          });
     }
@@ -257,6 +272,13 @@ HTMLWidgets.widget({
             })
             .transition()
             .style("opacity", opacity);
+    }
+
+    // round to significant figures / digits
+    function sigFigs(n, sig = "null") {
+        if (sig == "null") { sig = 7; }
+        var mult = Math.pow(10, sig - Math.floor(Math.log(n) / Math.LN10) - 1);
+        return Math.round(n * mult) / mult;
     }
 
   }  // end renderValue function
