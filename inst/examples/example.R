@@ -12,9 +12,17 @@ row.names(m) <- groupNames
 colnames(m) <- groupNames
 m
 
+
 # default call
 chorddiag(m)
 
 # customization: colors, margin, padding
 groupColors <- c("#000000", "#FFDD89", "#957244", "#F26223")
-chorddiag(m, groupColors = groupColors, groupnamePadding = 30, margin = 100)
+chorddiag(signif(m), groupColors = groupColors, groupnamePadding = 30, margin = 100)
+
+
+# uber data
+uber <- read.table(system.file("extdata", "uber.csv", package = "chorddiag"),
+                   header = TRUE, sep = ",")
+uber <- as.matrix(uber)
+chorddiag(uber, showTicks = FALSE, groupnamePadding = -10, margin = 100)
