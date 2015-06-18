@@ -8,6 +8,14 @@
 #' @param data A square matrix containing the data. Column names (if existing)
 #'   will be used as group labels unless the \code{groupNames} argument is
 #'   explicitely set. labels must be set via \code{colnames}
+#' @param type A character string for the type of chord diagram. Either
+#' "directional" (default), "RC" or "CR". Chord diagrams can be helpful for
+#' visualising symmetric relations between two categories of groups, too. In
+#' that case, the upper left and the lower right parts of the data matrix
+#' consist of zeros, and the lower left and the upper right parts of the matrix
+#' hold the same numbers (albeit transposed). For RC type chord diagrams, the
+#' chord tooltips only show the Row to Column numbers; for CR diagrams, only the
+#' Column to Row numbers are shown.
 #' @param width Width for the chord diagram's frame area in pixels (if NULL then
 #'   eidth is automatically determined based on context).
 #' @param height Height for the chord diagram's frame area in pixels (if NULL
@@ -32,12 +40,10 @@
 #' @param showTicks A logical scalar.
 #' @param tickInterval A numeric value.
 #' @param ticklabelFontsize Numeric font size in pixels for the tick labels.
-#' @param fadeLevel Numeric chord fade level.
+#' @param fadeLevel Numeric chord fade level (opacity value between 0 and 1, defaults to 0.1).
 #' @param showTooltips A logical scalar.
-#' @param tooltipType A character string, either "oneway" or "twoway".
 #' @param tooltipUnit A character string for the units to be used in tooltips.
-#' @param tooltipST A character string to be used in tooltips: "<source group> <tooltipST> <target group>". Defaults to a triangle pointing from source to target.
-#' @param tooltipTS A character string to be used in tooltips: "<target group> <tooltipTS> <source group>". Defaults to a triangle pointing from source to target.
+#' @param tooltipGroupConnector A character string to be used in tooltips: "<source group> <tooltipGroupConnector> <target group>". Defaults to a triangle pointing from source to target.
 #' @param precision Integer number of significant digits to be used for tooltip display.
 #'
 #' @source \url{http://bl.ocks.org/mbostock/4062006}
@@ -56,6 +62,7 @@
 #'
 #' @export
 chorddiag <- function(data,
+                      type = "directional",
                       width = NULL, height = NULL,
                       margin = 100,
                       palette = "Set2",
@@ -70,8 +77,7 @@ chorddiag <- function(data,
                       fadeLevel = 0.1,
                       showTooltips = TRUE,
                       tooltipUnit = NULL,
-                      tooltipST = " &#x25B6; ",
-                      tooltipTS = " &#x25C0; ",
+                      tooltipGroupConnector = " &#x25B6; ",
                       precision = NULL) {
 
     if (!is.matrix(data))
@@ -112,7 +118,8 @@ chorddiag <- function(data,
     }
 
     params = list(matrix = data,
-                  options = list(width = width, height = height,
+                  options = list(type = type,
+                                 width = width, height = height,
                                  margin = margin,
                                  groupNames = groupNames,
                                  groupColors = groupColors,
@@ -128,8 +135,7 @@ chorddiag <- function(data,
                                  fadeLevel = fadeLevel,
                                  showTooltips = showTooltips,
                                  tooltipUnit = tooltipUnit,
-                                 tooltipST = tooltipST,
-                                 tooltipTS = tooltipTS,
+                                 tooltipGroupConnector = tooltipGroupConnector,
                                  precision = precision))
     params = Filter(Negate(is.null), params)
 

@@ -7,19 +7,28 @@
 \url{http://bl.ocks.org/mbostock/4062006}
 }
 \usage{
-chorddiag(data, width = NULL, height = NULL, margin = 100,
-  palette = "Set2", groupNames = NULL, groupColors = NULL,
+chorddiag(data, type = "directional", width = NULL, height = NULL,
+  margin = 100, palette = "Set2", groupNames = NULL, groupColors = NULL,
   groupThickness = 0.1, groupPadding = 0.05, groupnamePadding = NULL,
   groupnameFontsize = 18, groupedgeColor = NULL,
   chordedgeColor = "#808080", showTicks = TRUE, tickInterval = NULL,
   ticklabelFontsize = 10, fadeLevel = 0.1, showTooltips = TRUE,
-  tooltipUnit = NULL, tooltipST = " &#x25B6; ", tooltipTS = " &#x25C0; ",
+  tooltipUnit = NULL, tooltipGroupConnector = " &#x25B6; ",
   precision = NULL)
 }
 \arguments{
 \item{data}{A square matrix containing the data. Column names (if existing)
 will be used as group labels unless the \code{groupNames} argument is
 explicitely set. labels must be set via \code{colnames}}
+
+\item{type}{A character string for the type of chord diagram. Either
+"directional" (default), "RC" or "CR". Chord diagrams can be helpful for
+visualising symmetric relations between two categories of groups, too. In
+that case, the upper left and the lower right parts of the data matrix
+consist of zeros, and the lower left and the upper right parts of the matrix
+hold the same numbers (albeit transposed). For RC type chord diagrams, the
+chord tooltips only show the Row to Column numbers; for CR diagrams, only the
+Column to Row numbers are shown.}
 
 \item{width}{Width for the chord diagram's frame area in pixels (if NULL then
 eidth is automatically determined based on context).}
@@ -60,19 +69,15 @@ used.}
 
 \item{ticklabelFontsize}{Numeric font size in pixels for the tick labels.}
 
-\item{fadeLevel}{Numeric chord fade level.}
+\item{fadeLevel}{Numeric chord fade level (opacity value between 0 and 1, defaults to 0.1).}
 
 \item{showTooltips}{A logical scalar.}
 
 \item{tooltipUnit}{A character string for the units to be used in tooltips.}
 
-\item{tooltipST}{A character string to be used in tooltips: "<source group> <tooltipST> <target group>". Defaults to a triangle pointing from source to target.}
-
-\item{tooltipTS}{A character string to be used in tooltips: "<target group> <tooltipTS> <source group>". Defaults to a triangle pointing from source to target.}
+\item{tooltipGroupConnector}{A character string to be used in tooltips: "<source group> <tooltipGroupConnector> <target group>". Defaults to a triangle pointing from source to target.}
 
 \item{precision}{Integer number of significant digits to be used for tooltip display.}
-
-\item{tooltipType}{A character string, either "oneway" or "twoway".}
 }
 \description{
 Create an interactive chord diagram using the JavaScript visualization

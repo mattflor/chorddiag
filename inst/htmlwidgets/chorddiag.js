@@ -36,7 +36,8 @@ HTMLWidgets.widget({
         height = el.offsetHeight,
         d = Math.min(width, height);
 
-    var margin = options.margin,
+    var type = options.type,
+        margin = options.margin,
         groupNames = options.groupNames,
         groupColors = options.groupColors,
         groupThickness = options.groupThickness,
@@ -51,8 +52,7 @@ HTMLWidgets.widget({
         fadeLevel = options.fadeLevel,
         showTooltips = options.showTooltips,
         tooltipUnit = options.tooltipUnit,
-        tooltipST = options.tooltipST,
-        tooltipTS = options.tooltipTS,
+        tooltipGroupConnector = options.tooltipGroupConnector,
         precision = options.precision;
 
     d3.select(el).selectAll("div.d3-tip").remove();
@@ -73,12 +73,18 @@ HTMLWidgets.widget({
                                  vij = vij.toPrecision(precision);
                                  vji = vji.toPrecision(precision);
                              }*/
-                             var dir1 = groupNames[i] + tooltipST + groupNames[j] + ": " + vij + tooltipUnit,
-                                 dir2 = groupNames[i] + tooltipTS + groupNames[j] + ": " + vji + tooltipUnit;
-                             if (i == j) {
+                             var dir1 = groupNames[i] + tooltipGroupConnector + groupNames[j] + ": " + vij + tooltipUnit,
+                                 dir2 = groupNames[j] + tooltipGroupConnector + groupNames[i] + ": " + vji + tooltipUnit;
+                             if (type == "directional") {
+                                 if (i == j) {
+                                     return dir1;
+                                 } else {
+                                     return dir1 + "</br>" + dir2;
+                                 }
+                             } else if (type == "RC") {
                                  return dir1;
-                             } else {
-                                return dir1 + "</br>" + dir2;
+                             } else if (type == "CR") {
+                                 return dir2;
                              }
                          });
 
