@@ -18,7 +18,7 @@ chorddiag(m)
 
 # customization: colors, margin, padding
 groupColors <- c("#000000", "#FFDD89", "#957244", "#F26223")
-chorddiag(signif(m), groupColors = groupColors, groupnamePadding = 30, margin = 100)
+chorddiag(m, groupColors = groupColors, groupnamePadding = 30, margin = 100)
 
 
 # uber data
