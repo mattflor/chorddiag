@@ -32,6 +32,7 @@
 #' @param showTicks A logical scalar.
 #' @param tickInterval A numeric value.
 #' @param ticklabelFontsize Numeric font size in pixels for the tick labels.
+#' @param fadeLevel Numeric chord fade level.
 #' @param showTooltips A logical scalar.
 #' @param tooltipType A character string, either "oneway" or "twoway".
 #' @param tooltipUnit A character string for the units to be used in tooltips.
@@ -66,6 +67,7 @@ chorddiag <- function(data,
                       chordedgeColor = "#808080",
                       showTicks = TRUE, tickInterval = NULL,
                       ticklabelFontsize = 10,
+                      fadeLevel = 0.1,
                       showTooltips = TRUE,
                       tooltipUnit = NULL,
                       tooltipTo = " &#x25B6; ",
@@ -119,6 +121,7 @@ chorddiag <- function(data,
                                  showTicks = showTicks,
                                  tickInterval = tickInterval,
                                  ticklabelFontsize = ticklabelFontsize,
+                                 fadeLevel = fadeLevel,
                                  showTooltips = showTooltips,
                                  tooltipUnit = tooltipUnit,
                                  tooltipTo = tooltipTo,

@@ -48,6 +48,7 @@ HTMLWidgets.widget({
         showTicks = options.showTicks,
         tickInterval = options.tickInterval,
         ticklabelFontsize = options.ticklabelFontsize,
+        fadeLevel = options.fadeLevel,
         showTooltips = options.showTooltips,
         tooltipUnit = options.tooltipUnit,
         tooltipTo = options.tooltipTo,
@@ -124,7 +125,7 @@ HTMLWidgets.widget({
           .attr("d", d3.svg.arc().innerRadius(innerRadius).outerRadius(outerRadius))
           .on("mouseover", function(d) {
               if (showTooltips) groupTip.show(d);
-              return groupFade(d, 0.2);
+              return groupFade(d, fadeLevel);
           })
           .on("mouseout", function(d) {
               if (showTooltips) groupTip.hide(d);
@@ -183,7 +184,7 @@ HTMLWidgets.widget({
           .style("opacity", 1)
           .on("mouseover", function(d) {
               if (showTooltips) chordTip.show(d);
-              return chordFade(d, 0.2);
+              return chordFade(d, fadeLevel);
           })
           .on("mouseout", function(d) {
               if (showTooltips) chordTip.hide(d);
@@ -194,8 +195,12 @@ HTMLWidgets.widget({
     var names = svg.append("g").attr("class", "name").selectAll("g")
                    .data(chord.groups)
                    .enter().append("g")
-                   .on("mouseover", function(d) { return groupFade(d, 0.2); })
-                   .on("mouseout", function(d) { return groupFade(d, 1); })
+                   .on("mouseover", function(d) {
+                       return groupFade(d, fadeLevel);
+                   })
+                   .on("mouseout", function(d) {
+                       return groupFade(d, 1);
+                   })
                    .selectAll("g")
                    .data(groupLabels)
                    .enter().append("g")
