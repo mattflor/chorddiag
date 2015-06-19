@@ -69,10 +69,6 @@ HTMLWidgets.widget({
                              // values
                              var vij = sigFigs(matrix[i][j], precision),
                                  vji = sigFigs(matrix[j][i], precision);
-                             /*if (precision != "null") {
-                                 vij = vij.toPrecision(precision);
-                                 vji = vji.toPrecision(precision);
-                             }*/
                              var dir1 = groupNames[i] + tooltipGroupConnector + groupNames[j] + ": " + vij + tooltipUnit,
                                  dir2 = groupNames[j] + tooltipGroupConnector + groupNames[i] + ": " + vji + tooltipUnit;
                              if (type == "directional") {
@@ -94,13 +90,6 @@ HTMLWidgets.widget({
                          .offset([0, 0])
                          .html(function(d) {
                              var value = sigFigs(d.value, precision);
-                             /*
-                             if (precision != "null") {
-                                //value = value.toPrecision(precision);
-                                value = sigFigs(value, precision);
-                             } else {
-                                 value = sigFigs(value);
-                             }*/
                              return groupNames[d.index] + " (total): " + value + tooltipUnit;
                          });
     }
@@ -281,7 +270,7 @@ HTMLWidgets.widget({
     }
 
     // round to significant figures / digits
-    function sigFigs(n, sig = "null") {
+    function sigFigs(n, sig) {
         if (sig == "null") { sig = 7; }
         var mult = Math.pow(10, sig - Math.floor(Math.log(n) / Math.LN10) - 1);
         return Math.round(n * mult) / mult;
