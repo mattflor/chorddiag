@@ -77,3 +77,6 @@ titanic_mat
 groupColors <- c("#2171b5", "#6baed6", "#bdd7e7", "#bababa", "#d7191c", "#1a9641")
 chorddiag(titanic_mat, type = "directional", groupColors = groupColors, tickInterval = 50)
 
+dimnames(m) <- list(Class = levels(titanic_tbl$Class),
+                    Survival = levels(titanic_tbl$Survived))
+chorddiag(m, type = "bipartite", tickInterval = 50)

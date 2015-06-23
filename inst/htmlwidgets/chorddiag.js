@@ -228,29 +228,49 @@ HTMLWidgets.widget({
         .text(function(d) { return d.label; })
         .attr("id", function(d) { return d.label; });
 
-    // create category labels
+    /* create category labels
     if (categoryNames) {
-        var categories = svg.append("g").attr("class", "category").selectAll("g")
-            .data(categoryNames)
-            .enter().append("g")
-            .append("text")
-            .attr("x", 25)
-            .attr("dy", ".35em")
-            .style("font-size", categorynameFontsize + "px")
-            //.style("font-family", "sans-serif")
-            .attr("transform", function(d) {
-                return "rotate(" + (2*d.index - 1) * 90 + ")"
-                    + "translate(" + (outerRadius + 50) + ", 0)";
-            })
-            .style("text-anchor", "middle")
-            .text(function(d) { return categoryNames[d.index]; });
+        svg.append("g").attr("class", "category")
+           .append("g").append("text")
+           .attr("x", 25)
+           .attr("dy", ".35em")
+           .style("font-size", categorynameFontsize + "px")
+           .attr("transform", function(d) {
+                return "rotate(90)" + "translate(" + (outerRadius + 50) + ", 0)";
+           })
+           .text(categoryNames[1])
+           .append("g").append("text")
+           .attr("x", 25)
+           .attr("dy", ".35em")
+           .style("font-size", categorynameFontsize + "px")
+           .attr("transform", function(d) {
+                return "rotate(270)" + "translate(" + (outerRadius + 50) + ", 0)";
+           });
+    }
+    */
+
+    //
+    if (categoryNames) {
+        var categoryRadius = outerRadius,
+            categoryArc = d3.svg.arc()
+                .innerRadius(categoryRadius)
+                .outerRadius(categoryRadius + 30);
+
+        svg.append("g").attr("class", "category")
+           .append("path")
+           .attr("d", categoryArc)
+           .append("svg:text")
+           .attr("x", 25)
+           .attr("dy", ".35em")
+           .append("svg:textPath")
+           .text(categoryNames[1]);
     }
 
     function categoryLabels(d) {
       return d3.range(0, d.value, 100).map(function(v, i) {
         return {
-          angle: (d.startAngle + d.endAngle) / 2,
-          label: i ? null : groupNames[d.index]
+          angle: (d.index - 1) * Math.Pi,
+          label: i ? null : categoryNames[d.index]
         };
       });
     }
