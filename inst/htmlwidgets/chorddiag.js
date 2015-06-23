@@ -46,6 +46,8 @@ HTMLWidgets.widget({
         groupnameFontsize = options.groupnameFontsize,
         groupedgeColor = options.groupedgeColor,
         chordedgeColor = options.chordedgeColor,
+        categoryNames = options.categoryNames,
+        categorynameFontsize = options.categorynameFontsize,
         showTicks = options.showTicks,
         tickInterval = options.tickInterval,
         ticklabelFontsize = options.ticklabelFontsize,
@@ -77,9 +79,7 @@ HTMLWidgets.widget({
                                  } else {
                                      return dir1 + "</br>" + dir2;
                                  }
-                             } else if (type == "RC") {
-                                 return dir1;
-                             } else if (type == "CR") {
+                             } else if (type == "bipartite") {
                                  return dir2;
                              }
                          });
@@ -223,10 +223,37 @@ HTMLWidgets.widget({
         .attr("dy", ".35em")
         .style("font-size", groupnameFontsize + "px")
         //.style("font-family", "sans-serif")
-        .attr("transform", function(d) { return d.angle > Math.PI ? "rotate(180)translate(-50)" : null; })
-        .style("text-anchor", function(d) { return d.angle > Math.PI ? "end" : null; })
+        .attr("transform", function(d) { return d.angle > (Math.PI + 0.1) ? "rotate(180)translate(-50)" : null; })
+        .style("text-anchor", function(d) { return d.angle > (Math.PI + 0.1) ? "end" : null; })
         .text(function(d) { return d.label; })
         .attr("id", function(d) { return d.label; });
+
+    // create category labels
+    if (categoryNames) {
+        var categories = svg.append("g").attr("class", "category").selectAll("g")
+            .data(categoryNames)
+            .enter().append("g")
+            .append("text")
+            .attr("x", 25)
+            .attr("dy", ".35em")
+            .style("font-size", categorynameFontsize + "px")
+            //.style("font-family", "sans-serif")
+            .attr("transform", function(d) {
+                return "rotate(" + (2*d.index - 1) * 90 + ")"
+                    + "translate(" + (outerRadius + 50) + ", 0)";
+            })
+            .style("text-anchor", "middle")
+            .text(function(d) { return categoryNames[d.index]; });
+    }
+
+    function categoryLabels(d) {
+      return d3.range(0, d.value, 100).map(function(v, i) {
+        return {
+          angle: (d.startAngle + d.endAngle) / 2,
+          label: i ? null : groupNames[d.index]
+        };
+      });
+    }
 
     // returns an array of tick angles and labels, given a group
     function groupTicks(d) {

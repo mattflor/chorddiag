@@ -5,17 +5,15 @@
 #' layout is based on \url{http://bl.ocks.org/mbostock/4062006}. Chord diagrams
 #' show directed relationships among a group of entities.
 #'
-#' @param data A square matrix containing the data. Column names (if existing)
-#'   will be used as group labels unless the \code{groupNames} argument is
-#'   explicitely set. labels must be set via \code{colnames}
+#' @param data A matrix containing the data. Must be square for the
+#'   "directional" type. Column names of the matrix (if existing) will be used
+#'   as group labels unless the \code{groupNames} argument is explicitely set.
+#'   For the "bipartite" type, the column names label the groups on the left
+#'   side of the chord diagram whereas the row names label the groups on the
+#'   right side.
 #' @param type A character string for the type of chord diagram. Either
-#' "directional" (default), "RC" or "CR". Chord diagrams can be helpful for
-#' visualising symmetric relations between two categories of groups, too. In
-#' that case, the upper left and the lower right parts of the data matrix
-#' consist of zeros, and the lower left and the upper right parts of the matrix
-#' hold the same numbers (albeit transposed). For RC type chord diagrams, the
-#' chord tooltips only show the Row to Column numbers; for CR diagrams, only the
-#' Column to Row numbers are shown.
+#'   "directional" (default) or "bipartite". Chord diagrams can be helpful for
+#'   visualising symmetric relations between two categories of groups, too.
 #' @param width Width for the chord diagram's frame area in pixels (if NULL then
 #'   eidth is automatically determined based on context).
 #' @param height Height for the chord diagram's frame area in pixels (if NULL
@@ -37,14 +35,22 @@
 #' @param groupedgeColor Color for the group edges. If NULL group colors will be
 #'   used.
 #' @param chordedgeColor Color for the chord edges.
+#' @param categoryNames A length-2 vector of character strings to be used for
+#'   category labels (left and right side of a bipartite chord diagram).
+#' @param categorynameFontsize Numeric font size in pixels for the category
+#'   labels in a bipartite diagram.
 #' @param showTicks A logical scalar.
 #' @param tickInterval A numeric value.
 #' @param ticklabelFontsize Numeric font size in pixels for the tick labels.
-#' @param fadeLevel Numeric chord fade level (opacity value between 0 and 1, defaults to 0.1).
+#' @param fadeLevel Numeric chord fade level (opacity value between 0 and 1,
+#'   defaults to 0.1).
 #' @param showTooltips A logical scalar.
 #' @param tooltipUnit A character string for the units to be used in tooltips.
-#' @param tooltipGroupConnector A character string to be used in tooltips: "<source group> <tooltipGroupConnector> <target group>". Defaults to a triangle pointing from source to target.
-#' @param precision Integer number of significant digits to be used for tooltip display.
+#' @param tooltipGroupConnector A character string to be used in tooltips:
+#'   "<source group> <tooltipGroupConnector> <target group>". Defaults to a
+#'   triangle pointing from source to target.
+#' @param precision Integer number of significant digits to be used for tooltip
+#'   display.
 #'
 #' @source \url{http://bl.ocks.org/mbostock/4062006}
 #'
@@ -72,6 +78,8 @@ chorddiag <- function(data,
                       groupnamePadding = NULL, groupnameFontsize = 18,
                       groupedgeColor = NULL,
                       chordedgeColor = "#808080",
+                      categoryNames = NULL,
+                      categorynameFontsize = 20,
                       showTicks = TRUE, tickInterval = NULL,
                       ticklabelFontsize = 10,
                       fadeLevel = 0.1,
@@ -84,9 +92,31 @@ chorddiag <- function(data,
         stop("'data' must be a matrix class object.")
 
     d <- dim(data)
-    if (d[1] != d[2] )
-        stop("'data' must be a square matrix.")
-    n <- d[1]
+    if (type == "bipartite") {
+        g1 <- d[1]
+        g2 <- d[2]
+        n <- g1 + g2
+        m <- matrix(0, nrow = n, ncol = n)
+        m[1:g1, (g1+1):n] <- data
+        m[(g1+1):n, 1:g1] <- t(data)
+        g1.names <- row.names(data)
+        g2.names <- colnames(data)
+        m.names <- c(g1.names, g2.names)
+        row.names(m) <- m.names
+        colnames(m) <- m.names
+        if (is.null(categoryNames)) {
+            # get categoryNames from data dimnames
+            categoryNames <- names(dimnames(data))
+        }
+        data <- m
+    } else if (type == "directional") {
+        if (d[1] != d[2] ) stop("'data' must be a square matrix.")
+        n <- d[1]
+    }
+
+    if (!is.null(categoryNames) & type != "bipartite") {
+        warning("category names are only used for bipartite chord diagrams.")
+    }
 
     if (!is.null(groupNames)) {
         g <- length(groupNames)
@@ -129,6 +159,8 @@ chorddiag <- function(data,
                                  groupnameFontsize = groupnameFontsize,
                                  groupedgeColor = groupedgeColor,
                                  chordedgeColor = chordedgeColor,
+                                 categoryNames = categoryNames,
+                                 categorynameFontsize = categorynameFontsize,
                                  showTicks = showTicks,
                                  tickInterval = tickInterval,
                                  ticklabelFontsize = ticklabelFontsize,
