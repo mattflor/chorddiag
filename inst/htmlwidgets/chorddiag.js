@@ -124,10 +124,10 @@ HTMLWidgets.widget({
     }
 
     // create groups
-    var groups = svg.append("g").attr("class", "group")
-                                .selectAll("path")
-                                .data(chord.groups)
-                                .enter().append("path");
+    var groups = svg.append("g").attr("class", "groups")
+                    .selectAll("path")
+                    .data(chord.groups)
+                    .enter().append("path").attr("class", "group");
 
     // style groups and define mouse events
     groups.style("fill", function(d) { return fillScale(d.index); })
@@ -150,15 +150,17 @@ HTMLWidgets.widget({
 
     if (showTicks) {
         // create ticks for groups
-        var ticks = svg.append("g").attr("class", "tick").selectAll("g")
-            .data(chord.groups)
-            .enter().append("g").selectAll("g")
-            .data(groupTicks)
-            .enter().append("g")
-            .attr("transform", function(d) {
-                return "rotate(" + (d.angle * 180 / Math.PI - 90) + ")"
-                     + "translate(" + outerRadius + ", 0)";
-                });
+        var ticks = svg.append("g").attr("class", "group-ticks")
+                       .selectAll("g")
+                       .data(chord.groups)
+                       .enter().append("g").attr("class", "ticks")
+                       .selectAll("g")
+                       .data(groupTicks)
+                       .enter().append("g").attr("class", "tick")
+                       .attr("transform", function(d) {
+                           return "rotate(" + (d.angle * 180 / Math.PI - 90) + ")"
+                               + "translate(" + outerRadius + ", 0)";
+                       });
 
         // add tick marks
         ticks.append("line")
@@ -180,10 +182,10 @@ HTMLWidgets.widget({
     }
 
     // create chords
-    var chords = svg.append("g").attr("class", "chord")
+    var chords = svg.append("g").attr("class", "chords")
                     .selectAll("path")
                     .data(chord.chords)
-                    .enter().append("path")
+                    .enter().append("path").attr("class", "chord")
                     .attr("d", d3.svg.chord().radius(innerRadius));
 
     // style chords and define mouse events
@@ -202,9 +204,10 @@ HTMLWidgets.widget({
           });
 
     // create group labels
-    var names = svg.append("g").attr("class", "name").selectAll("g")
+    var names = svg.append("g").attr("class", "names")
+                   .selectAll("g")
                    .data(chord.groups)
-                   .enter().append("g")
+                   .enter().append("g").attr("class", "name")
                    .on("mouseover", function(d) {
                        return groupFade(d, fadeLevel);
                    })
@@ -223,33 +226,34 @@ HTMLWidgets.widget({
         .attr("dy", ".35em")
         .style("font-size", groupnameFontsize + "px")
         //.style("font-family", "sans-serif")
-        .attr("transform", function(d) { return d.angle > (Math.PI + 0.1) ? "rotate(180)translate(-50)" : null; })
-        .style("text-anchor", function(d) { return d.angle > (Math.PI + 0.1) ? "end" : null; })
+        .attr("transform", function(d) { return d.handside == "right" ? "rotate(180)translate(-50)" : null; })
+        .style("text-anchor", function(d) { return d.handside == "right" ? "end" : null; })
         .text(function(d) { return d.label; })
         .attr("id", function(d) { return d.label; });
 
-    /* create category labels
     if (categoryNames) {
         svg.append("g").attr("class", "category")
            .append("g").append("text")
            .attr("x", 25)
            .attr("dy", ".35em")
            .style("font-size", categorynameFontsize + "px")
+           .style("font-weight", "bold")
            .attr("transform", function(d) {
-                return "rotate(90)" + "translate(" + (outerRadius + 50) + ", 0)";
+                return "translate(" + (outerRadius + 50) + ", 0)";
            })
-           .text(categoryNames[1])
+           .text(categoryNames[0])
            .append("g").append("text")
            .attr("x", 25)
            .attr("dy", ".35em")
            .style("font-size", categorynameFontsize + "px")
+           .style("font-weight", "bold")
            .attr("transform", function(d) {
                 return "rotate(270)" + "translate(" + (outerRadius + 50) + ", 0)";
-           });
+           })
+           .text(categoryNames[1]);
     }
-    */
 
-    //
+    /*
     if (categoryNames) {
         var categoryRadius = outerRadius,
             categoryArc = d3.svg.arc()
@@ -263,14 +267,14 @@ HTMLWidgets.widget({
            .attr("x", 25)
            .attr("dy", ".35em")
            .append("svg:textPath")
-           .text(categoryNames[1]);
-    }
+           .text(categoryNames[0]);
+    }*/
 
     function categoryLabels(d) {
-      return d3.range(0, d.value, 100).map(function(v, i) {
+      return d3.range(1).map(function(v, i) {
         return {
-          angle: (d.index - 1) * Math.Pi,
-          label: i ? null : categoryNames[d.index]
+          angle: (2*d.index + 1) * Math.PI / 2,
+          label: categoryNames[d.index]
         };
       });
     }
@@ -287,10 +291,11 @@ HTMLWidgets.widget({
     }
 
     function groupLabels(d) {
-      return d3.range(0, d.value, 100).map(function(v, i) {
+      return d3.range(1).map(function(v, i) {
         return {
           angle: (d.startAngle + d.endAngle) / 2,
-          label: i ? null : groupNames[d.index]
+          handside: (d.startAngle < Math.PI) ? "left" : "right",
+          label: groupNames[d.index] //i ? null : groupNames[d.index]
         };
       });
     }
@@ -298,7 +303,7 @@ HTMLWidgets.widget({
     // returns an event handler for fading all chords not belonging to a
     // specific group
     function groupFade(g, opacity) {
-        svg.selectAll(".chord path")
+        svg.selectAll(".chords path")
             .filter(function(d) { return d.source.index != g.index
                                       && d.target.index != g.index; })
             .transition()
@@ -308,7 +313,7 @@ HTMLWidgets.widget({
     // returns an event handler for fading all chords except for the one
     // given
     function chordFade(g, opacity) {
-        svg.selectAll(".chord path")
+        svg.selectAll(".chords path")
             .filter(function(d) { return d.source.index != g.source.index
                                       || d.target.index != g.target.index;
             })
