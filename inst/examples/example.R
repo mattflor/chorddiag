@@ -60,3 +60,8 @@ groupColors <- c("#2171b5", "#6baed6", "#bdd7e7", "#bababa", "#d7191c", "#1a9641
 chorddiag(m, type = "bipartite", groupColors = groupColors,
           tooltipGroupConnector = " in ",
           tickInterval = 50)
+# TODO: percentage mode for bipartite diagrams?
+chorddiag(100*m/rowSums(m), type = "bipartite",
+          groupColors = groupColors, tickInterval = 10,
+          precision = 2,
+          tooltipGroupConnector = " in ", tooltipUnit = " %")
