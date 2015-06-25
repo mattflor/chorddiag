@@ -17,6 +17,7 @@ shinyServer(function(input, output) {
         chorddiag(m, groupColors = groupColors,
                   groupnamePadding = input$groupnamePadding,
                   showTicks = input$showTicks,
-                  margin = input$margin)
+                  margin = input$margin,
+                  tooltipGroupConnector = " prefer ")
     )
 })
