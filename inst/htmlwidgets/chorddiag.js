@@ -47,6 +47,7 @@ HTMLWidgets.widget({
         groupedgeColor = options.groupedgeColor,
         chordedgeColor = options.chordedgeColor,
         categoryNames = options.categoryNames,
+        categorynamePadding = options.categorynamePadding,
         categorynameFontsize = options.categorynameFontsize,
         showTicks = options.showTicks,
         tickInterval = options.tickInterval,
@@ -127,7 +128,9 @@ HTMLWidgets.widget({
     var groups = svg.append("g").attr("class", "groups")
                     .selectAll("path")
                     .data(chord.groups)
-                    .enter().append("path").attr("class", "group");
+                    .enter().append("path").attr("id", function(d, i) {
+                           return "group-" + groupNames[i];
+                    });
 
     // style groups and define mouse events
     groups.style("fill", function(d) { return fillScale(d.index); })
@@ -150,10 +153,13 @@ HTMLWidgets.widget({
 
     if (showTicks) {
         // create ticks for groups
-        var ticks = svg.append("g").attr("class", "group-ticks")
+        var ticks = svg.append("g").attr("class", "ticks")
                        .selectAll("g")
                        .data(chord.groups)
-                       .enter().append("g").attr("class", "ticks")
+                       .enter().append("g") //.attr("class", "ticks")
+                       .attr("id", function(d, i) {
+                           return "ticks-" + groupNames[i];
+                       })
                        .selectAll("g")
                        .data(groupTicks)
                        .enter().append("g").attr("class", "tick")
@@ -172,12 +178,12 @@ HTMLWidgets.widget({
 
         // add tick labels
         ticks.append("text")
-             .attr("x", 8)
+             .attr("x", 0)
              .attr("dy", ".35em")
              .style("font-size", ticklabelFontsize + "px")
              //.style("font-family", "sans-serif")
-             .attr("transform", function(d) { return d.angle > Math.PI ? "rotate(180)translate(-16)" : null; })
-             .style("text-anchor", function(d) { return d.angle > Math.PI ? "end" : null; })
+             .attr("transform", function(d) { return d.angle > Math.PI ? "rotate(180)translate(-8)" : "translate(8)"; })
+             .style("text-anchor", function(d) { return d.angle > Math.PI ? "end" : "start"; })
              .text(function(d) { return d.label; });
     }
 
@@ -185,7 +191,10 @@ HTMLWidgets.widget({
     var chords = svg.append("g").attr("class", "chords")
                     .selectAll("path")
                     .data(chord.chords)
-                    .enter().append("path").attr("class", "chord")
+                    .enter().append("path").attr("id", function(d, i) {
+                        return "chord-" + groupNames[d.source.index]
+                               + "-" + groupNames[d.target.index];
+                    })
                     .attr("d", d3.svg.chord().radius(innerRadius));
 
     // style chords and define mouse events
@@ -216,67 +225,58 @@ HTMLWidgets.widget({
                    })
                    .selectAll("g")
                    .data(groupLabels)
-                   .enter().append("g")
+                   .enter().append("g").attr("id", function(d) {
+                       return "label-" + d.label;
+                   })
                    .attr("transform", function(d) {
                        return "rotate(" + (d.angle * 180 / Math.PI - 90) + ")"
                             + "translate(" + (outerRadius + groupnamePadding) + ", 0)";
                        });
     names.append("text")
-        .attr("x", 25)
+        .attr("x", 0)
         .attr("dy", ".35em")
         .style("font-size", groupnameFontsize + "px")
         //.style("font-family", "sans-serif")
-        .attr("transform", function(d) { return d.handside == "right" ? "rotate(180)translate(-50)" : null; })
-        .style("text-anchor", function(d) { return d.handside == "right" ? "end" : null; })
+        .attr("transform", function(d) {
+            return d.handside == "left" ? "rotate(180)" : null;
+        })
+        .style("text-anchor", function(d) { return d.handside == "left" ? "end" : "start"; })
         .text(function(d) { return d.label; })
         .attr("id", function(d) { return d.label; });
 
     if (categoryNames) {
-        svg.append("g").attr("class", "category")
-           .append("g").append("text")
-           .attr("x", 25)
-           .attr("dy", ".35em")
-           .style("font-size", categorynameFontsize + "px")
-           .style("font-weight", "bold")
-           .attr("transform", function(d) {
-                return "translate(" + (outerRadius + 50) + ", 0)";
-           })
-           .text(categoryNames[0])
-           .append("g").append("text")
-           .attr("x", 25)
-           .attr("dy", ".35em")
-           .style("font-size", categorynameFontsize + "px")
-           .style("font-weight", "bold")
-           .attr("transform", function(d) {
-                return "rotate(270)" + "translate(" + (outerRadius + 50) + ", 0)";
-           })
-           .text(categoryNames[1]);
+        var categories = svg.append("g").attr("class", "categories")
+                            .selectAll("g")
+                            .data(categoryNames)
+                            .enter().append("g").attr("class", "category")
+                            .selectAll("g")
+                            .data(categoryLabels)
+                            .enter().append("g")
+                            .style("fill", "black")
+                            .attr("id", function(d) {
+                                return "label-" + d.label;
+                            })
+                            .attr("transform", function(d) {
+                                return "rotate(" + (d.angle * 180 / Math.PI) + ")"
+                                    + "translate(" + (outerRadius + categorynamePadding) + ", 0)";
+                            });
+
+        categories.append("text")
+                  .attr("x", 0)
+                  .attr("dy", ".35em")
+                  .style("font-size", categorynameFontsize + "px")
+                  .style("font-weight", "bold")
+                  .attr("transform", function(d, i) { return i ? "rotate(270)" : "rotate(90)"; })
+                  .style("text-anchor", "middle")
+                  .text(function(d) { return d.label; })
+                  .attr("id", function(d) { return d.label; });
     }
 
-    /*
-    if (categoryNames) {
-        var categoryRadius = outerRadius,
-            categoryArc = d3.svg.arc()
-                .innerRadius(categoryRadius)
-                .outerRadius(categoryRadius + 30);
-
-        svg.append("g").attr("class", "category")
-           .append("path")
-           .attr("d", categoryArc)
-           .append("svg:text")
-           .attr("x", 25)
-           .attr("dy", ".35em")
-           .append("svg:textPath")
-           .text(categoryNames[0]);
-    }*/
-
-    function categoryLabels(d) {
-      return d3.range(1).map(function(v, i) {
-        return {
-          angle: (2*d.index + 1) * Math.PI / 2,
-          label: categoryNames[d.index]
-        };
-      });
+    function categoryLabels(d, i) {
+        return [{
+          angle: i * Math.PI,
+          label: d
+        }];
     }
 
     // returns an array of tick angles and labels, given a group
@@ -291,13 +291,12 @@ HTMLWidgets.widget({
     }
 
     function groupLabels(d) {
-      return d3.range(1).map(function(v, i) {
-        return {
-          angle: (d.startAngle + d.endAngle) / 2,
-          handside: (d.startAngle < Math.PI) ? "left" : "right",
-          label: groupNames[d.index] //i ? null : groupNames[d.index]
-        };
-      });
+      var a = (d.startAngle + d.endAngle) / 2;
+      return [{
+          angle: a,
+          handside: (a < Math.PI) ? "right" : "left",
+          label: groupNames[d.index]
+        }];
     }
 
     // returns an event handler for fading all chords not belonging to a

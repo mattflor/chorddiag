@@ -21,22 +21,29 @@
 #' @param margin Numeric margin in pixels between the outer diagram radius and
 #'   the edge of the display.
 #' @param palette A character string. The name of the colorbrewer palette to be
-#'   used.
+#'   used. For bipartite diagrams, the palette is used for the column groups.
+#' @param palette2 A character string. Only used for bipartite diagrams where it
+#'   is the name of the colorbrewer palette to be used for the row groups.
 #' @param groupNames A vector of character strings to be used for group
 #'   labeling.
-#' @param groupColors A vector of colors to be used for the groups. Providing
-#'   \code{groupColors} overrides any \code{palette} given.
+#' @param groupColors A vector of colors to be used for the groups. Specifying
+#'   \code{groupColors} overrides any \code{palette} given. For bipartite
+#'   diagrams, the colors used for the row groups must precede the colors for
+#'   the column groups.
 #' @param groupThickness Numeric thickness for the groups as a fraction of the
 #'   total diagram radius.
-#' @param groupPadding Numeric padding between groups.
+#' @param groupPadding Numeric padding in degrees between groups.
 #' @param groupnamePadding Numeric padding between diagram and group labels. Use
-#'   this argument if group labels overlag with tick labels.
+#'   this argument if group labels overlap with tick labels.
 #' @param groupnameFontsize Numeric font size in pixels for the group labels.
 #' @param groupedgeColor Color for the group edges. If NULL group colors will be
 #'   used.
 #' @param chordedgeColor Color for the chord edges.
 #' @param categoryNames A length-2 vector of character strings to be used for
 #'   category labels (left and right side of a bipartite chord diagram).
+#' @param categorynamePadding Numeric padding between diagram and category
+#'   labels in bipartite diagrams. Use this argument if category labels overlap
+#'   with tick or group labels.
 #' @param categorynameFontsize Numeric font size in pixels for the category
 #'   labels in a bipartite diagram.
 #' @param showTicks A logical scalar.
@@ -52,7 +59,8 @@
 #' @param precision Integer number of significant digits to be used for tooltip
 #'   display.
 #'
-#' @source \url{http://bl.ocks.org/mbostock/4062006}
+#' @source Based on \url{http://bl.ocks.org/mbostock/4062006} with several
+#'   modifications.
 #'
 #' @examples
 #' m <- matrix(c(11975,  5871, 8916, 2868,
@@ -71,15 +79,16 @@ chorddiag <- function(data,
                       type = "directional",
                       width = NULL, height = NULL,
                       margin = 100,
-                      palette = "Set2",
+                      palette = "Dark2",
+                      palette2 = "Greys",
                       groupNames = NULL,
                       groupColors = NULL, groupThickness = 0.1,
-                      groupPadding = 0.05,
-                      groupnamePadding = NULL, groupnameFontsize = 18,
+                      groupPadding = 2,
+                      groupnamePadding = 30, groupnameFontsize = 18,
                       groupedgeColor = NULL,
                       chordedgeColor = "#808080",
                       categoryNames = NULL,
-                      categorynameFontsize = 24,
+                      categorynamePadding = 100, categorynameFontsize = 28,
                       showTicks = TRUE, tickInterval = NULL,
                       ticklabelFontsize = 10,
                       fadeLevel = 0.1,
@@ -132,7 +141,14 @@ chorddiag <- function(data,
     }
 
     if (is.null(groupColors)) {
-        groupColors <- RColorBrewer::brewer.pal(n, palette)
+        if (type == "directional") {
+            groupColors <- RColorBrewer::brewer.pal(n, palette)
+        } else if (type == "bipartite") {
+            groupColors <- c(
+                RColorBrewer::brewer.pal(g1, palette2),
+                RColorBrewer::brewer.pal(g2, palette)
+            )
+        }
     }
 
     if (is.null(tickInterval)) {
@@ -154,12 +170,13 @@ chorddiag <- function(data,
                                  groupNames = groupNames,
                                  groupColors = groupColors,
                                  groupThickness = groupThickness,
-                                 groupPadding = groupPadding,
+                                 groupPadding = pi * groupPadding / 180,
                                  groupnamePadding = groupnamePadding,
                                  groupnameFontsize = groupnameFontsize,
                                  groupedgeColor = groupedgeColor,
                                  chordedgeColor = chordedgeColor,
                                  categoryNames = categoryNames,
+                                 categorynamePadding = categorynamePadding,
                                  categorynameFontsize = categorynameFontsize,
                                  showTicks = showTicks,
                                  tickInterval = tickInterval,
