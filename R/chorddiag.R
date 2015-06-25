@@ -15,7 +15,7 @@
 #'   "directional" (default) or "bipartite". Chord diagrams can be helpful for
 #'   visualising symmetric relations between two categories of groups, too.
 #' @param width Width for the chord diagram's frame area in pixels (if NULL then
-#'   eidth is automatically determined based on context).
+#'   width is automatically determined based on context).
 #' @param height Height for the chord diagram's frame area in pixels (if NULL
 #'   then height is automatically determined based on context).
 #' @param margin Numeric margin in pixels between the outer diagram radius and
