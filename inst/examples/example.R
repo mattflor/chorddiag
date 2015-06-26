@@ -44,24 +44,19 @@ chorddiag(uber*100000, showTicks = TRUE, tickInterval = 1000,
 
 
 # Bipartite chord diagram with Titanic data
-library(dplyr)
-library(data.table)
-titanic_tbl <- tbl_dt(Titanic)
-titanic_tbl <- titanic_tbl %>%
-    mutate_each(funs(factor), Class:Survived)
-by_class_survival <- titanic_tbl %>%
-    group_by(Class, Survived) %>%
-    summarize(Count = sum(N))
-m <- matrix(by_class_survival$Count, nrow = 4, ncol = 2)
-dimnames(m) <- list(Class = levels(titanic_tbl$Class),
-                    Survival = levels(titanic_tbl$Survived))
-m
-groupColors <- c("#2171b5", "#6baed6", "#bdd7e7", "#bababa", "#d7191c", "#1a9641")
-chorddiag(m, type = "bipartite", groupColors = groupColors,
-          tooltipGroupConnector = " in ",
-          tickInterval = 50)
-# TODO: percentage mode for bipartite diagrams?
-chorddiag(100*m/rowSums(m), type = "bipartite",
-          groupColors = groupColors, tickInterval = 10,
-          precision = 2,
-          tooltipGroupConnector = " in ", tooltipUnit = " %")
+if (requireNamespace("dplyr", quietly = TRUE)) {
+    titanic_tbl <- dplyr::tbl_dt(Titanic)
+    titanic_tbl <- titanic_tbl %>%
+        mutate_each(funs(factor), Class:Survived)
+    by_class_survival <- titanic_tbl %>%
+        group_by(Class, Survived) %>%
+        summarize(Count = sum(N))
+    m <- matrix(by_class_survival$Count, nrow = 4, ncol = 2)
+    dimnames(m) <- list(Class = levels(titanic_tbl$Class),
+                        Survival = levels(titanic_tbl$Survived))
+    m
+    groupColors <- c("#2171b5", "#6baed6", "#bdd7e7", "#bababa", "#d7191c", "#1a9641")
+    chorddiag(m, type = "bipartite", groupColors = groupColors,
+              tooltipGroupConnector = " in ",
+              tickInterval = 50)
+}
