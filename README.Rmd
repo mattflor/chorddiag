@@ -64,7 +64,7 @@ Here is an example for the `Titanic` dataset, depicting how many passengers from
 
 ![Bipartite chord diagram for the Titanic dataset](README-chorddiagram-titanic-bipartite.png)
 
-See the vignette for more information.
+See the [vignette](vignettes/chorddiagram-vignette.Rmd) for more information.
 
 
 ## Updating to the latest version of chorddiag
