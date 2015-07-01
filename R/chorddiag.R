@@ -12,8 +12,9 @@
 #'   side of the chord diagram whereas the row names label the groups on the
 #'   right side.
 #' @param type A character string for the type of chord diagram. Either
-#'   "directional" (default) or "bipartite". Chord diagrams can be helpful for
-#'   visualising symmetric relations between two categories of groups, too.
+#'   "directional" (default) or "bipartite" (chord diagrams can be helpful for
+#'   visualising symmetric relations between two categories of groups, i.e.
+#'   contingency tables).
 #' @param width Width for the chord diagram's frame area in pixels (if NULL then
 #'   width is automatically determined based on context).
 #' @param height Height for the chord diagram's frame area in pixels (if NULL
