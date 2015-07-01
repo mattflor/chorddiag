@@ -38,7 +38,7 @@ chorddiag(m, groupColors = groupColors, groupnamePadding = 20)
 ```
 
 <!--![Directional chord diagram for the hair dataset](README-chorddiagram-hair-directional.png)-->
-<img src = "images/README-chorddiagram-hair-directional.png" 
+<img src = "README-chorddiagram-hair-directional.png" 
      alt = "Directional chord diagram for the hair dataset"
      title = ""
      data-toggle = "tooltip"
