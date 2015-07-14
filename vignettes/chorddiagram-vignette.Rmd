@@ -8,6 +8,9 @@ output:
         fig_caption: yes
 vignette: >
   %\VignetteIndexEntry{Creating D3 Chord Diagrams}
+  %\VignetteKeyword{Chord Diagram}
+  %\VignetteKeyword{D3}
+  %\VignetteKeyword{HTML Widget}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -37,18 +40,18 @@ devtools::install_github("mattflor/chorddiag")
 
 (you obviously need the `devtools` package for this).
 
-
-# Usage
-
 After installation, the package is loaded via
 
 ```{r, eval = FALSE}
 library(chorddiag)
 ```
 
+
+# Examples
+
 ## Hair Color Preference
 
-To create a chord diagram for the hair color preference example stated in the intoduction, we need the preferences in matrix format:
+To create a chord diagram for the hair color preference example stated in the introduction, we need the preferences in matrix format:
 
 ```{r}
 m <- matrix(c(11975,  5871, 8916, 2868,
@@ -60,10 +63,12 @@ m <- matrix(c(11975,  5871, 8916, 2868,
 haircolors <- c("black", "blonde", "brown", "red")
 dimnames(m) <- list(have = haircolors,
                     prefer = haircolors)
+print(m)
 ```
 
 ```{r, echo = FALSE, results = 'asis'}
-pander::pandoc.table(m, caption = "Hair color preference data. Row names show what hair color people have, and column names show what hair color they prefer for a dating partner.")
+pander::pandoc.table(m, style = "rmarkdown",
+                     caption = "Hair color preference data. Row names show what hair color people have, and column names show what hair color they prefer for a dating partner.")
 ```
 
 Then, we can pass this matrix to the `chorddiag` function to create the chord diagram:
@@ -82,24 +87,30 @@ groupColors <- c("#000000", "#FFDD89", "#957244", "#F26223")
 chorddiag(m, groupColors = groupColors, groupnamePadding = 20)
 ```
 
-![Customized chord diagram for the hair color preference dataset.](images/chorddiagram-directional-hair.png)
+![Customized chord diagram for the hair color preference dataset, using custom colors and more padding between the diagram and group labels to avoid overlap with tick labels.](images/chorddiagram-directional-hair.png)
 
-Interactive here means chord fading and tooltip popups on certain mouse over events.
+*Interactive* chord diagram refers to chord fading and tooltip popups on certain mouse over events.
 E.g. if the mouse pointer hovers over the chord connecting the "blonde" and "red" groups, a tooltip is displayed giving the numbers for the chord, and all other chords fade away.
+Or, when hovering over a group arc, all chords *not * belonging to that group fade away, and a tooltip displays summarized group information.
+Fading levels can be set, and tooltip layout can be customized to some degree as well; for details, see the `chorddiag` function's documentation.
 
-![Tooltip and chord fading showcase for the hair color preference chord diagram.](images/chorddiagram-directional-hair-tooltip.png)
-
-
-## Uber data
-
-To be written...
+![Tooltip and chord fading showcase for the hair color preference chord diagram. In this case, we can see that a considerable fraction of blonde people prefer red-haired dating partners whereas only a small fraction of red-haired people prefer blonde partners.](images/chorddiagram-directional-hair-tooltip.png)
 
 
-## Bipartite Chord Diagrams
+## Uber Rides
 
-The default chord diagram type is **directional** but chord diagrams can also be a useful visualization of relationships between two categories of groups, i.e. contingency tables.
+
+http://bost.ocks.org/mike/uberdata/
+
+
+## Titanic Survival (Bipartite Chord Diagram)
+
+The default chord diagram type is **directional**, allowing for visualization of asymmetric relationships.
+But chord diagrams can also be a useful visualization of frequency distributions for two categories of groups, in other word contingency tables (or cross tabulations or crosstabs).
 In this package, this type of chord diagram is called **bipartite** (because there are only chords *between* categories but not *within* categories).
-Here is an example for the `Titanic` dataset, basically a contingency table of how many passengers from the different classes and from the crew survived or died when the ship sunk.
+
+Here is an example for the `Titanic` dataset.
+First, we create a contingency table of how many passengers from the different classes and from the crew survived or died when the Titanic sunk.
 
 ```{r, fig.width = 8, warning = FALSE, message = FALSE}
 library(dplyr)
@@ -112,17 +123,19 @@ by_class_survival <- titanic_tbl %>%
 titanic.mat <- matrix(by_class_survival$Count, nrow = 4, ncol = 2)
 dimnames(titanic.mat ) <- list(Class = levels(titanic_tbl$Class),
                                Survival = levels(titanic_tbl$Survived))
-titanic.mat
+print(titanic.mat)
 ```
 
-Note that we labeled the dimensions of the matrix by assigning a named list to the `dimnames`.
+Note that we labeled the dimensions of the matrix by assigning a named list to `dimnames`.
 The dimension labels (here: "Class" and "Survival") will automatically be used in the chord diagram.
 
 ```{r, echo = FALSE, results = 'asis'}
-pander::pandoc.table(titanic.mat, caption = "Titanic data. Counts of people who died ('No') or survived ('Yes') grouped by membership to passenger class and crew.")
+pander::pandoc.table(titanic.mat, 
+                     type = "rmarkdown",
+                     caption = "Titanic data. Counts of people who died ('No') or survived ('Yes') grouped by membership to passenger class and crew.")
 ```
 
-We can create a "bipartite" chord diagram for the Titanic data by setting `type = "bipartite"`.
+We can create a "bipartite" chord diagram for this matrix by setting `type = "bipartite"`.
 
 ```{r, eval = FALSE}
 groupColors <- c("#2171b5", "#6baed6", "#bdd7e7", "#bababa", "#d7191c", "#1a9641")
