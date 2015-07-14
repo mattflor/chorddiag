@@ -36,12 +36,27 @@ chorddiag(100*m/rowSums(m), groupColors = groupColors, groupnamePadding = 30,
 
 # uber data
 uber <- read.table(system.file("extdata", "uber.csv", package = "chorddiag"),
-                   header = TRUE, sep = ",")
+                   header = TRUE, sep = ",",
+                   check.names = FALSE)
 uber <- as.matrix(uber)
 uber
-chorddiag(uber*100000, showTicks = TRUE, tickInterval = 1000,
-          groupnamePadding = 30, groupnameFontsize = 12, margin = 150)
+chorddiag(uber*100, precision = 2,
+          showTicks = TRUE, tickInterval = 1000,
+          groupnamePadding = 30, groupnameFontsize = 12, margin = 150,
+          tooltipUnit = " %")
 
+# NYC flights
+library(tidyr)
+df <- flights %>%
+    mutate_each(funs(factor), origin:dest) %>%
+    group_by(origin, dest) %>%
+    summarise(count = n())
+df.spread <- spread(df, origin, count, fill = 0)
+m <- data.matrix(df.spread[, 2:4])
+dimnames(m) <- list(destination = levels(df$dest),
+                    origin = levels(df$origin))
+chorddiag(m, type = "bipartite", showTicks = FALSE,
+          groupPadding = 0)
 
 # Bipartite chord diagram with Titanic data
 if (requireNamespace("dplyr", quietly = TRUE)) {
