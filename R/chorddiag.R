@@ -34,17 +34,18 @@
 #' @param groupThickness Numeric thickness for the groups as a fraction of the
 #'   total diagram radius.
 #' @param groupPadding Numeric padding in degrees between groups.
-#' @param groupnamePadding Numeric padding between diagram and group labels. Use
-#'   this argument if group labels overlap with tick labels.
+#' @param groupnamePadding Numeric padding in pixels between diagram (outer
+#'   circle) and group labels. Use this argument if group labels overlap with
+#'   tick labels.
 #' @param groupnameFontsize Numeric font size in pixels for the group labels.
 #' @param groupedgeColor Color for the group edges. If NULL group colors will be
 #'   used.
 #' @param chordedgeColor Color for the chord edges.
 #' @param categoryNames A length-2 vector of character strings to be used for
 #'   category labels (left and right side of a bipartite chord diagram).
-#' @param categorynamePadding Numeric padding between diagram and category
-#'   labels in bipartite diagrams. Use this argument if category labels overlap
-#'   with tick or group labels.
+#' @param categorynamePadding Numeric padding in pixels between diagram (outer
+#'   circle) and category labels in bipartite diagrams. Use this argument if
+#'   category labels overlap with tick or group labels.
 #' @param categorynameFontsize Numeric font size in pixels for the category
 #'   labels in a bipartite diagram.
 #' @param showTicks A logical scalar.
