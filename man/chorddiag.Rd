@@ -10,9 +10,10 @@ Based on \url{http://bl.ocks.org/mbostock/4062006} with several
 \usage{
 chorddiag(data, type = "directional", width = NULL, height = NULL,
   margin = 100, palette = "Dark2", palette2 = "Greys",
-  groupNames = NULL, groupColors = NULL, groupThickness = 0.1,
-  groupPadding = 2, groupnamePadding = 30, groupnameFontsize = 18,
-  groupedgeColor = NULL, chordedgeColor = "#808080", categoryNames = NULL,
+  showGroupnames = TRUE, groupNames = NULL, groupColors = NULL,
+  groupThickness = 0.1, groupPadding = 2, groupnamePadding = 30,
+  groupnameFontsize = 18, groupedgeColor = NULL,
+  chordedgeColor = "#808080", categoryNames = NULL,
   categorynamePadding = 100, categorynameFontsize = 28, showTicks = TRUE,
   tickInterval = NULL, ticklabelFontsize = 10, fadeLevel = 0.1,
   showTooltips = TRUE, tooltipUnit = NULL,
@@ -59,8 +60,9 @@ total diagram radius.}
 
 \item{groupPadding}{Numeric padding in degrees between groups.}
 
-\item{groupnamePadding}{Numeric padding between diagram and group labels. Use
-this argument if group labels overlap with tick labels.}
+\item{groupnamePadding}{Numeric padding in pixels between diagram (outer
+circle) and group labels. Use this argument if group labels overlap with
+tick labels.}
 
 \item{groupnameFontsize}{Numeric font size in pixels for the group labels.}
 
@@ -72,9 +74,9 @@ used.}
 \item{categoryNames}{A length-2 vector of character strings to be used for
 category labels (left and right side of a bipartite chord diagram).}
 
-\item{categorynamePadding}{Numeric padding between diagram and category
-labels in bipartite diagrams. Use this argument if category labels overlap
-with tick or group labels.}
+\item{categorynamePadding}{Numeric padding in pixels between diagram (outer
+circle) and category labels in bipartite diagrams. Use this argument if
+category labels overlap with tick or group labels.}
 
 \item{categorynameFontsize}{Numeric font size in pixels for the category
 labels in a bipartite diagram.}
