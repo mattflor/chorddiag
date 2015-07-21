@@ -38,6 +38,7 @@ HTMLWidgets.widget({
 
     var type = options.type,
         margin = options.margin,
+        showGroupnames = options.showGroupnames,
         groupNames = options.groupNames,
         groupColors = options.groupColors,
         groupThickness = options.groupThickness,
@@ -213,36 +214,38 @@ HTMLWidgets.widget({
           });
 
     // create group labels
-    var names = svg.append("g").attr("class", "names")
-                   .selectAll("g")
-                   .data(chord.groups)
-                   .enter().append("g").attr("class", "name")
-                   .on("mouseover", function(d) {
-                       return groupFade(d, fadeLevel);
-                   })
-                   .on("mouseout", function(d) {
-                       return groupFade(d, 1);
-                   })
-                   .selectAll("g")
-                   .data(groupLabels)
-                   .enter().append("g").attr("id", function(d) {
-                       return "label-" + d.label;
-                   })
-                   .attr("transform", function(d) {
-                       return "rotate(" + (d.angle * 180 / Math.PI - 90) + ")"
-                            + "translate(" + (outerRadius + groupnamePadding) + ", 0)";
-                       });
-    names.append("text")
-        .attr("x", 0)
-        .attr("dy", ".35em")
-        .style("font-size", groupnameFontsize + "px")
-        //.style("font-family", "sans-serif")
-        .attr("transform", function(d) {
-            return d.handside == "left" ? "rotate(180)" : null;
-        })
-        .style("text-anchor", function(d) { return d.handside == "left" ? "end" : "start"; })
-        .text(function(d) { return d.label; })
-        .attr("id", function(d) { return d.label; });
+    if (showGroupnames) {
+        var names = svg.append("g").attr("class", "names")
+                       .selectAll("g")
+                       .data(chord.groups)
+                       .enter().append("g").attr("class", "name")
+                       .on("mouseover", function(d) {
+                           return groupFade(d, fadeLevel);
+                       })
+                       .on("mouseout", function(d) {
+                           return groupFade(d, 1);
+                       })
+                       .selectAll("g")
+                       .data(groupLabels)
+                       .enter().append("g").attr("id", function(d) {
+                           return "label-" + d.label;
+                       })
+                       .attr("transform", function(d) {
+                           return "rotate(" + (d.angle * 180 / Math.PI - 90) + ")"
+                                + "translate(" + (outerRadius + groupnamePadding) + ", 0)";
+                           });
+        names.append("text")
+            .attr("x", 0)
+            .attr("dy", ".35em")
+            .style("font-size", groupnameFontsize + "px")
+            //.style("font-family", "sans-serif")
+            .attr("transform", function(d) {
+                return d.handside == "left" ? "rotate(180)" : null;
+            })
+            .style("text-anchor", function(d) { return d.handside == "left" ? "end" : "start"; })
+            .text(function(d) { return d.label; })
+            .attr("id", function(d) { return d.label; });
+    }
 
     if (categoryNames) {
         var categories = svg.append("g").attr("class", "categories")
