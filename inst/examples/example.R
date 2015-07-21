@@ -34,10 +34,11 @@ chorddiag(100*m/rowSums(m), groupColors = groupColors, groupnamePadding = 30,
           tooltipGroupConnector = " prefer ", tooltipUnit = " %",
           precision = 2)
 
-# world migration
+# world migrant stocks
 library(migration.indices)
-library(RColorBrewer)
-data("migration.world")
+data("migration.world")   # this 226x226 matrix has migrant stock numbers from 1990
+                          # where row name gives the country of origin and column
+                          # name gives the destination country
 sort.by.orig <- sort(rowSums(migration.world), decreasing = TRUE, index.return = TRUE)
 mig.sorted.by.orig <- migration.world[sort.by.orig$ix, sort.by.orig$ix]
 row.names(mig.sorted.by.orig) <- names(sort.by.orig$x)
@@ -58,25 +59,9 @@ groupColors <- rep(brewer.pal(12, "Set3")[c(1:8, 10:12)], length.out = n)
 chorddiag(mig.sorted.by.dest, showGroupnames = FALSE, groupPadding = 0,
           showTicks = FALSE, margin = 50,
           chordedgeColor = NULL, groupColors = groupColors,
-          tooltipGroupConnector = " &#x25c0; ")
+          tooltipGroupConnector = " &#x25c0; ",
+          fadeLevel = 0)
 
-country.names <- make.names(row.names(migration.world))
-df <- tbl_df(as.data.frame(migration.world))
-colnames(df) <- country.names
-df <- df %>%
-    mutate(Origin = country.names,
-           Total = rowSums(migration.world)) %>%
-    select(Origin, Total, 1:n)
-df %>% arrange(desc(Total), Origin)
-
-migration.world.t <- t(migration.world)
-df2 <- tbl_df(as.data.frame(migration.world.t))
-colnames(df2) <- country.names
-df2 <- df2 %>%
-    mutate(Destination = country.names,
-           Total = rowSums(migration.world.t)) %>%
-    select(Destination, Total, 1:n)
-df2 %>% arrange(desc(Total), Destination)
 
 
 # Bipartite chord diagram with Titanic data
