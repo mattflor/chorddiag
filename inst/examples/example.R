@@ -34,29 +34,50 @@ chorddiag(100*m/rowSums(m), groupColors = groupColors, groupnamePadding = 30,
           tooltipGroupConnector = " prefer ", tooltipUnit = " %",
           precision = 2)
 
-# uber data
-uber <- read.table(system.file("extdata", "uber.csv", package = "chorddiag"),
-                   header = TRUE, sep = ",",
-                   check.names = FALSE)
-uber <- as.matrix(uber)
-uber
-chorddiag(uber*100, precision = 2,
-          showTicks = TRUE, tickInterval = 1000,
-          groupnamePadding = 30, groupnameFontsize = 12, margin = 150,
-          tooltipUnit = " %")
+# world migration
+library(migration.indices)
+library(RColorBrewer)
+data("migration.world")
+sort.by.orig <- sort(rowSums(migration.world), decreasing = TRUE, index.return = TRUE)
+mig.sorted.by.orig <- migration.world[sort.by.orig$ix, sort.by.orig$ix]
+row.names(mig.sorted.by.orig) <- names(sort.by.orig$x)
 
-# NYC flights
-library(tidyr)
-df <- flights %>%
-    mutate_each(funs(factor), origin:dest) %>%
-    group_by(origin, dest) %>%
-    summarise(count = n())
-df.spread <- spread(df, origin, count, fill = 0)
-m <- data.matrix(df.spread[, 2:4])
-dimnames(m) <- list(destination = levels(df$dest),
-                    origin = levels(df$origin))
-chorddiag(m, type = "bipartite", showTicks = FALSE,
-          groupPadding = 0)
+n <- dim(mig.sorted.by.orig)[1]
+groupColors <- rep(brewer.pal(12, "Set3")[c(1:8, 10:12)], length.out = n)
+chorddiag(mig.sorted.by.orig, showGroupnames = FALSE, groupPadding = 0,
+          showTicks = FALSE, margin = 50,
+          chordedgeColor = NULL, groupColors = groupColors)
+
+mig.transposed <- t(migration.world)
+sort.by.dest <- sort(rowSums(mig.transposed), decreasing = TRUE, index.return = TRUE)
+mig.sorted.by.dest <- mig.transposed[sort.by.dest$ix, sort.by.dest$ix]
+row.names(mig.sorted.by.dest) <- names(sort.by.dest$x)
+
+n <- dim(mig.sorted.by.dest)[1]
+groupColors <- rep(brewer.pal(12, "Set3")[c(1:8, 10:12)], length.out = n)
+chorddiag(mig.sorted.by.dest, showGroupnames = FALSE, groupPadding = 0,
+          showTicks = FALSE, margin = 50,
+          chordedgeColor = NULL, groupColors = groupColors,
+          tooltipGroupConnector = " &#x25c0; ")
+
+country.names <- make.names(row.names(migration.world))
+df <- tbl_df(as.data.frame(migration.world))
+colnames(df) <- country.names
+df <- df %>%
+    mutate(Origin = country.names,
+           Total = rowSums(migration.world)) %>%
+    select(Origin, Total, 1:n)
+df %>% arrange(desc(Total), Origin)
+
+migration.world.t <- t(migration.world)
+df2 <- tbl_df(as.data.frame(migration.world.t))
+colnames(df2) <- country.names
+df2 <- df2 %>%
+    mutate(Destination = country.names,
+           Total = rowSums(migration.world.t)) %>%
+    select(Destination, Total, 1:n)
+df2 %>% arrange(desc(Total), Destination)
+
 
 # Bipartite chord diagram with Titanic data
 if (requireNamespace("dplyr", quietly = TRUE)) {
