@@ -34,8 +34,10 @@ chorddiag(100*m/rowSums(m), groupColors = groupColors, groupnamePadding = 30,
           tooltipGroupConnector = " prefer ", tooltipUnit = " %",
           precision = 2)
 
+
 # world migrant stocks
 library(migration.indices)
+library(RColorBrewer)
 data("migration.world")   # this 226x226 matrix has migrant stock numbers from 1990
                           # where row name gives the country of origin and column
                           # name gives the destination country
@@ -45,9 +47,20 @@ row.names(mig.sorted.by.orig) <- names(sort.by.orig$x)
 
 n <- dim(mig.sorted.by.orig)[1]
 groupColors <- rep(brewer.pal(12, "Set3")[c(1:8, 10:12)], length.out = n)
-chorddiag(mig.sorted.by.orig, showGroupnames = FALSE, groupPadding = 0,
-          showTicks = FALSE, margin = 50,
-          chordedgeColor = NULL, groupColors = groupColors)
+groupNames <- rep("", n)
+ix <- c(1:50, seq(52, 100, by = 2),
+        seq(105, 150, by = 5),
+        160, 180, 226)
+groupNames[ix] <- colnames(mig.sorted.by.orig)[ix]
+tooltipNames <- colnames(mig.sorted.by.orig)
+chorddiag(mig.sorted.by.orig, groupPadding = 0,
+          showTicks = FALSE, margin = 120,
+          chordedgeColor = NULL, groupColors = groupColors,
+          groupnameFontsize = 10,
+          groupNames = groupNames,
+          groupnamePadding = 10,
+          tooltipNames = tooltipNames,
+          fadeLevel = 0)
 
 mig.transposed <- t(migration.world)
 sort.by.dest <- sort(rowSums(mig.transposed), decreasing = TRUE, index.return = TRUE)
@@ -56,12 +69,21 @@ row.names(mig.sorted.by.dest) <- names(sort.by.dest$x)
 
 n <- dim(mig.sorted.by.dest)[1]
 groupColors <- rep(brewer.pal(12, "Set3")[c(1:8, 10:12)], length.out = n)
-chorddiag(mig.sorted.by.dest, showGroupnames = FALSE, groupPadding = 0,
-          showTicks = FALSE, margin = 50,
+groupNames <- rep("", n)
+ix <- c(1:40, seq(42, 60, by = 2),
+        seq(65, 100, by = 5),
+        110, 130, 150, 226)
+groupNames[ix] <- colnames(mig.sorted.by.dest)[ix]
+tooltipNames <- colnames(mig.sorted.by.dest)
+chorddiag(mig.sorted.by.dest, groupPadding = 0,
+          showTicks = FALSE, margin = 120,
           chordedgeColor = NULL, groupColors = groupColors,
+          groupnameFontsize = 10,
+          groupNames = groupNames,
+          groupnamePadding = 10,
+          tooltipNames = tooltipNames,
           tooltipGroupConnector = " &#x25c0; ",
           fadeLevel = 0)
-
 
 
 # Bipartite chord diagram with Titanic data

@@ -55,6 +55,7 @@ HTMLWidgets.widget({
         ticklabelFontsize = options.ticklabelFontsize,
         fadeLevel = options.fadeLevel,
         showTooltips = options.showTooltips,
+        tooltipNames = options.tooltipNames,
         tooltipUnit = options.tooltipUnit,
         tooltipGroupConnector = options.tooltipGroupConnector,
         precision = options.precision;
@@ -73,8 +74,8 @@ HTMLWidgets.widget({
                              // values
                              var vij = sigFigs(matrix[i][j], precision),
                                  vji = sigFigs(matrix[j][i], precision);
-                             var dir1 = groupNames[i] + tooltipGroupConnector + groupNames[j] + ": " + vij + tooltipUnit,
-                                 dir2 = groupNames[j] + tooltipGroupConnector + groupNames[i] + ": " + vji + tooltipUnit;
+                             var dir1 = tooltipNames[i] + tooltipGroupConnector + tooltipNames[j] + ": " + vij + tooltipUnit,
+                                 dir2 = tooltipNames[j] + tooltipGroupConnector + tooltipNames[i] + ": " + vji + tooltipUnit;
                              if (type == "directional") {
                                  if (i == j) {
                                      return dir1;
@@ -92,7 +93,7 @@ HTMLWidgets.widget({
                          .offset([0, 0])
                          .html(function(d) {
                              var value = sigFigs(d.value, precision);
-                             return groupNames[d.index] + " (total): " + value + tooltipUnit;
+                             return tooltipNames[d.index] + " (total): " + value + tooltipUnit;
                          });
     }
 
@@ -232,8 +233,8 @@ HTMLWidgets.widget({
                        })
                        .attr("transform", function(d) {
                            return "rotate(" + (d.angle * 180 / Math.PI - 90) + ")"
-                                + "translate(" + (outerRadius + groupnamePadding) + ", 0)";
-                           });
+                                + "translate(" + (outerRadius + d.padding) + ", 0)";
+                       });
         names.append("text")
             .attr("x", 0)
             .attr("dy", ".35em")
@@ -298,7 +299,8 @@ HTMLWidgets.widget({
       return [{
           angle: a,
           handside: (a < Math.PI) ? "right" : "left",
-          label: groupNames[d.index]
+          label: groupNames[d.index],
+          padding: groupnamePadding[d.index]
         }];
     }
 

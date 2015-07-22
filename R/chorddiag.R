@@ -25,6 +25,7 @@
 #'   used. For bipartite diagrams, the palette is used for the column groups.
 #' @param palette2 A character string. Only used for bipartite diagrams where it
 #'   is the name of the colorbrewer palette to be used for the row groups.
+#' @param showGroupnames A logical scalar.
 #' @param groupNames A vector of character strings to be used for group
 #'   labeling.
 #' @param groupColors A vector of colors to be used for the groups. Specifying
@@ -36,7 +37,8 @@
 #' @param groupPadding Numeric padding in degrees between groups.
 #' @param groupnamePadding Numeric padding in pixels between diagram (outer
 #'   circle) and group labels. Use this argument if group labels overlap with
-#'   tick labels.
+#'   tick labels. Either a scalar value to be applied to all group labels or a
+#'   numeric vector specifying padding for each group label separately.
 #' @param groupnameFontsize Numeric font size in pixels for the group labels.
 #' @param groupedgeColor Color for the group edges. If NULL group colors will be
 #'   used.
@@ -54,6 +56,8 @@
 #' @param fadeLevel Numeric chord fade level (opacity value between 0 and 1,
 #'   defaults to 0.1).
 #' @param showTooltips A logical scalar.
+#' @param tooltipNames A vector of character strings to be used for group
+#'   labeling in tooltips. By default equal to \code{groupNames}.
 #' @param tooltipUnit A character string for the units to be used in tooltips.
 #' @param tooltipGroupConnector A character string to be used in tooltips:
 #'   "<source group> <tooltipGroupConnector> <target group>". Defaults to a
@@ -96,6 +100,7 @@ chorddiag <- function(data,
                       ticklabelFontsize = 10,
                       fadeLevel = 0.1,
                       showTooltips = TRUE,
+                      tooltipNames = NULL,
                       tooltipUnit = NULL,
                       tooltipGroupConnector = " &#x25B6; ",
                       precision = NULL) {
@@ -143,6 +148,10 @@ chorddiag <- function(data,
             warning("row names of the 'data' matrix differ from its column names or the 'groupNames' argument.")
     }
 
+    if (length(groupnamePadding) == 1) {
+        groupnamePadding <- rep(groupnamePadding, n)
+    }
+
     if (is.null(groupColors)) {
         if (type == "directional") {
             groupColors <- RColorBrewer::brewer.pal(n, palette)
@@ -156,6 +165,10 @@ chorddiag <- function(data,
 
     if (is.null(tickInterval)) {
         tickInterval <- 10^(floor(log10(max(data))) - 1)
+    }
+
+    if (is.null(tooltipNames)) {
+        tooltipNames = groupNames
     }
 
     if (is.null(tooltipUnit)) {
@@ -187,6 +200,7 @@ chorddiag <- function(data,
                                  ticklabelFontsize = ticklabelFontsize,
                                  fadeLevel = fadeLevel,
                                  showTooltips = showTooltips,
+                                 tooltipNames = tooltipNames,
                                  tooltipUnit = tooltipUnit,
                                  tooltipGroupConnector = tooltipGroupConnector,
                                  precision = precision))

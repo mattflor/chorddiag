@@ -16,7 +16,7 @@ chorddiag(data, type = "directional", width = NULL, height = NULL,
   chordedgeColor = "#808080", categoryNames = NULL,
   categorynamePadding = 100, categorynameFontsize = 28, showTicks = TRUE,
   tickInterval = NULL, ticklabelFontsize = 10, fadeLevel = 0.1,
-  showTooltips = TRUE, tooltipUnit = NULL,
+  showTooltips = TRUE, tooltipNames = NULL, tooltipUnit = NULL,
   tooltipGroupConnector = " &#x25B6; ", precision = NULL)
 }
 \arguments{
@@ -47,6 +47,8 @@ used. For bipartite diagrams, the palette is used for the column groups.}
 \item{palette2}{A character string. Only used for bipartite diagrams where it
 is the name of the colorbrewer palette to be used for the row groups.}
 
+\item{showGroupnames}{A logical scalar.}
+
 \item{groupNames}{A vector of character strings to be used for group
 labeling.}
 
@@ -62,7 +64,8 @@ total diagram radius.}
 
 \item{groupnamePadding}{Numeric padding in pixels between diagram (outer
 circle) and group labels. Use this argument if group labels overlap with
-tick labels.}
+tick labels. Either a scalar value to be applied to all group labels or a
+numeric vector specifying padding for each group label separately.}
 
 \item{groupnameFontsize}{Numeric font size in pixels for the group labels.}
 
@@ -91,6 +94,9 @@ labels in a bipartite diagram.}
 defaults to 0.1).}
 
 \item{showTooltips}{A logical scalar.}
+
+\item{tooltipNames}{A vector of character strings to be used for group
+labeling in tooltips. By default equal to \code{groupNames}.}
 
 \item{tooltipUnit}{A character string for the units to be used in tooltips.}
 
