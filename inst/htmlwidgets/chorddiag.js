@@ -327,6 +327,7 @@ HTMLWidgets.widget({
 
     // round to significant figures / digits
     function sigFigs(n, sig) {
+        if (n == 0) { return n}
         if (sig == "null") { sig = 7; }
         var mult = Math.pow(10, sig - Math.floor(Math.log(n) / Math.LN10) - 1);
         return Math.round(n * mult) / mult;
