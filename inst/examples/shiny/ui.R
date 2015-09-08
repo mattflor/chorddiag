@@ -12,7 +12,7 @@ shinyUI(fluidPage(
         ),
 
         mainPanel(
-            chorddiagOutput('chorddiag', height = '500px')
+            chorddiagOutput('chorddiag', height = '600px')
         )
     )
 ))

@@ -17,7 +17,8 @@ chorddiag(data, type = "directional", width = NULL, height = NULL,
   categorynamePadding = 100, categorynameFontsize = 28, showTicks = TRUE,
   tickInterval = NULL, ticklabelFontsize = 10, fadeLevel = 0.1,
   showTooltips = TRUE, tooltipNames = NULL, tooltipUnit = NULL,
-  tooltipGroupConnector = " &#x25B6; ", precision = NULL)
+  tooltipFontsize = 12, tooltipGroupConnector = " &#x25B6; ",
+  precision = NULL)
 }
 \arguments{
 \item{data}{A matrix containing the data. Must be square for the
@@ -99,6 +100,8 @@ defaults to 0.1).}
 labeling in tooltips. By default equal to \code{groupNames}.}
 
 \item{tooltipUnit}{A character string for the units to be used in tooltips.}
+
+\item{tooltipFontsize}{Numeric font size in pixels for the tooltips.}
 
 \item{tooltipGroupConnector}{A character string to be used in tooltips:
 "<source group> <tooltipGroupConnector> <target group>". Defaults to a

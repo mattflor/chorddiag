@@ -59,6 +59,7 @@
 #' @param tooltipNames A vector of character strings to be used for group
 #'   labeling in tooltips. By default equal to \code{groupNames}.
 #' @param tooltipUnit A character string for the units to be used in tooltips.
+#' @param tooltipFontsize Numeric font size in pixels for the tooltips.
 #' @param tooltipGroupConnector A character string to be used in tooltips:
 #'   "<source group> <tooltipGroupConnector> <target group>". Defaults to a
 #'   triangle pointing from source to target.
@@ -102,6 +103,7 @@ chorddiag <- function(data,
                       showTooltips = TRUE,
                       tooltipNames = NULL,
                       tooltipUnit = NULL,
+                      tooltipFontsize = 12,
                       tooltipGroupConnector = " &#x25B6; ",
                       precision = NULL) {
 
@@ -201,6 +203,7 @@ chorddiag <- function(data,
                                  fadeLevel = fadeLevel,
                                  showTooltips = showTooltips,
                                  tooltipNames = tooltipNames,
+                                 tooltipFontsize = tooltipFontsize,
                                  tooltipUnit = tooltipUnit,
                                  tooltipGroupConnector = tooltipGroupConnector,
                                  precision = precision))

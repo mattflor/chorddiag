@@ -56,6 +56,7 @@ HTMLWidgets.widget({
         fadeLevel = options.fadeLevel,
         showTooltips = options.showTooltips,
         tooltipNames = options.tooltipNames,
+        tooltipFontsize = options.tooltipFontsize,
         tooltipUnit = options.tooltipUnit,
         tooltipGroupConnector = options.tooltipGroupConnector,
         precision = options.precision;
@@ -65,6 +66,8 @@ HTMLWidgets.widget({
     if (showTooltips) {
         var chordTip = d3.tip()
                          .attr('class', 'd3-tip')
+                         .style("font-size", tooltipFontsize + "px")
+                         .style("font-family", "sans-serif")
                          .direction('mt')
                          .offset([0, 0])
                          .html(function(d) {
@@ -89,6 +92,8 @@ HTMLWidgets.widget({
 
         var groupTip = d3.tip()
                          .attr('class', 'd3-tip')
+                         .style("font-size", tooltipFontsize + "px")
+                         .style("font-family", "sans-serif")
                          .direction('mt')
                          .offset([0, 0])
                          .html(function(d) {
@@ -183,7 +188,7 @@ HTMLWidgets.widget({
              .attr("x", 0)
              .attr("dy", ".35em")
              .style("font-size", ticklabelFontsize + "px")
-             //.style("font-family", "sans-serif")
+             .style("font-family", "sans-serif")
              .attr("transform", function(d) { return d.angle > Math.PI ? "rotate(180)translate(-8)" : "translate(8)"; })
              .style("text-anchor", function(d) { return d.angle > Math.PI ? "end" : "start"; })
              .text(function(d) { return d.label; });
@@ -239,7 +244,7 @@ HTMLWidgets.widget({
             .attr("x", 0)
             .attr("dy", ".35em")
             .style("font-size", groupnameFontsize + "px")
-            //.style("font-family", "sans-serif")
+            .style("font-family", "sans-serif")
             .attr("transform", function(d) {
                 return d.handside == "left" ? "rotate(180)" : null;
             })
@@ -269,6 +274,7 @@ HTMLWidgets.widget({
                   .attr("x", 0)
                   .attr("dy", ".35em")
                   .style("font-size", categorynameFontsize + "px")
+                  .style("font-family", "sans-serif")
                   .style("font-weight", "bold")
                   .attr("transform", function(d, i) { return i ? "rotate(270)" : "rotate(90)"; })
                   .style("text-anchor", "middle")

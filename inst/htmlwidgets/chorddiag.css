@@ -1,10 +1,6 @@
-body {
-    font: 10px sans-serif;
-}
-
 .d3-tip {
   line-height: 1;
-  font-weight: bold;
+  /*font-weight: bold;*/
   padding: 12px;
   background: rgba(0, 0, 0, 0.7);
   color: #fff;

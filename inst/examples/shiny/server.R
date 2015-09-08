@@ -1,4 +1,5 @@
 library(shiny)
+library(chorddiag)
 
 m <- matrix(c(11975,  5871, 8916, 2868,
               1951, 10048, 2060, 6171,
@@ -14,10 +15,10 @@ colnames(m) <- groupNames
 
 shinyServer(function(input, output) {
     output$chorddiag <- renderChorddiag(
-        chorddiag(m, groupColors = groupColors,
+        chorddiag(m,
+                  groupColors = groupColors,
                   groupnamePadding = input$groupnamePadding,
                   showTicks = input$showTicks,
-                  margin = input$margin,
-                  tooltipGroupConnector = " prefer ")
+                  margin = input$margin)
     )
 })
