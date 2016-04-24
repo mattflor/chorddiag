@@ -1,6 +1,6 @@
 Package: chorddiag
 Title: Interactive Chord Diagrams
-Version: 0.0.0.9000
+Version: 0.0.1
 Authors@R: person("Matthias", "Flor", email = "matthias.c.flor@gmail.com", role = c("aut", "cre"))
 Description: Interactive Chord Diagrams via the D3 JavaScript library
     Based on http://bl.ocks.org/mbostock/4062006 with some modifications
