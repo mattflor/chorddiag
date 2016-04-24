@@ -59,8 +59,10 @@
       while(i--) nodel.classed(directions[i], false);
       coords = direction_callbacks.get(dir).apply(this);
       nodel.classed(dir, true).style({
-        top: (coords.top +  poffset[0]) + scrollTop + 'px',
-        left: (coords.left + poffset[1]) + scrollLeft + 'px'
+        //top: (coords.top +  poffset[0]) + scrollTop + 'px',
+        //left: (coords.left + poffset[1]) + scrollLeft + 'px'
+        top: (coords.top +  poffset[0]) + 'px',
+        left: (coords.left + poffset[1]) + 'px'
       });
 
       return tip;
@@ -170,7 +172,8 @@
       ne: direction_ne,
       sw: direction_sw,
       se: direction_se,
-      mt: direction_mt
+      mt: direction_mt,
+      m:  direction_m
     }),
 
     directions = direction_callbacks.keys();
@@ -178,8 +181,8 @@
     // mt - mousetip
     function direction_mt() {
         return {
-            top: d3.event.pageY - node.offsetHeight,
-            left: d3.event.pageX - node.offsetWidth
+            top: d3.event.pageY,
+            left: d3.event.pageX
         };
     }
 
@@ -243,7 +246,16 @@
       var bbox = getScreenBBox();
       return {
         top:  bbox.se.y,
-        left: bbox.e.x
+        left: bbox.se.x
+      };
+    }
+
+    // middle of the bbox
+    function direction_m() {
+      var bbox = getScreenBBox();
+      return {
+        top:  bbox.ne.y + (bbox.sw.y - bbox.ne.y) / 2,
+        left: bbox.nw.x + (bbox.ne.x - bbox.nw.x) / 2
       };
     }
 
