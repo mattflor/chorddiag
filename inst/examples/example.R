@@ -16,7 +16,8 @@ m
 # the number of people with different hair colors asked what hair color they
 # prefer; this probably reflects how many people there were with the different
 # hair colors
-chorddiag(m)
+chorddiag(m, showGroupnames = T)
+
 
 # customization: colors, margin, padding
 groupColors <- c("#000000", "#FFDD89", "#957244", "#F26223")

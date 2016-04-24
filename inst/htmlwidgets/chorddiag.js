@@ -69,7 +69,7 @@ HTMLWidgets.widget({
                          .style("font-size", tooltipFontsize + "px")
                          .style("font-family", "sans-serif")
                          .direction('mt')
-                         .offset([0, 0])
+                         .offset([10, 10])
                          .html(function(d) {
                              // indexes
                              var i = d.source.index,
@@ -95,7 +95,7 @@ HTMLWidgets.widget({
                          .style("font-size", tooltipFontsize + "px")
                          .style("font-family", "sans-serif")
                          .direction('mt')
-                         .offset([0, 0])
+                         .offset([10, 10])
                          .html(function(d) {
                              var value = sigFigs(d.value, precision);
                              return tooltipNames[d.index] + " (total): " + value + tooltipUnit;
