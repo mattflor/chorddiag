@@ -19,6 +19,12 @@ shinyServer(function(input, output) {
                   groupColors = groupColors,
                   groupnamePadding = input$groupnamePadding,
                   showTicks = input$showTicks,
-                  margin = input$margin)
+                  margin = input$margin,
+                  clickAction = "Shiny.onInputChange('sourceIndex', d.source.index+1);
+                                Shiny.onInputChange('targetIndex', d.target.index+1);")
     )
+    
+    output$shiny_return <- renderPrint({
+        paste0(groupNames[input$sourceIndex], " <-> ", groupNames[input$targetIndex])
+    })
 })
