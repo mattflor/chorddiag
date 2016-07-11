@@ -217,7 +217,8 @@ HTMLWidgets.widget({
           .on("mouseout", function(d) {
               if (showTooltips) chordTip.hide(d);
               return chordFade(d, 1);
-          });
+          })
+          .on("click", click);
 
     // create group labels
     if (showGroupnames) {
@@ -337,6 +338,10 @@ HTMLWidgets.widget({
         if (sig == "null") { sig = 7; }
         var mult = Math.pow(10, sig - Math.floor(Math.log(n) / Math.LN10) - 1);
         return Math.round(n * mult) / mult;
+    }
+    
+    function click(d) {
+      return eval(options.clickAction);
     }
 
   }  // end renderValue function

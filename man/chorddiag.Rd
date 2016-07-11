@@ -18,7 +18,7 @@ chorddiag(data, type = "directional", width = NULL, height = NULL,
   tickInterval = NULL, ticklabelFontsize = 10, fadeLevel = 0.1,
   showTooltips = TRUE, tooltipNames = NULL, tooltipUnit = NULL,
   tooltipFontsize = 12, tooltipGroupConnector = " &#x25B6; ",
-  precision = NULL)
+  precision = NULL, clickAction = NULL)
 }
 \arguments{
 \item{data}{A matrix containing the data. Must be square for the
