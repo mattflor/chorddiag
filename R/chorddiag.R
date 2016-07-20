@@ -65,6 +65,7 @@
 #'   triangle pointing from source to target.
 #' @param precision Integer number of significant digits to be used for tooltip
 #'   display.
+#' @param clickAction character string containing JavaScript code to be executed on a mouse click so that shiny can get the sourceIndex and targetIndex for the purpose of filtering the data on other visualizations
 #'
 #' @source Based on \url{http://bl.ocks.org/mbostock/4062006} with several
 #'   modifications.
@@ -105,7 +106,8 @@ chorddiag <- function(data,
                       tooltipUnit = NULL,
                       tooltipFontsize = 12,
                       tooltipGroupConnector = " &#x25B6; ",
-                      precision = NULL) {
+                      precision = NULL,
+                      clickAction = NULL) {
 
     if (!is.matrix(data))
         stop("'data' must be a matrix class object.")
@@ -206,7 +208,8 @@ chorddiag <- function(data,
                                  tooltipFontsize = tooltipFontsize,
                                  tooltipUnit = tooltipUnit,
                                  tooltipGroupConnector = tooltipGroupConnector,
-                                 precision = precision))
+                                 precision = precision,
+                                 clickAction = clickAction))
     params = Filter(Negate(is.null), params)
 
     # create widget

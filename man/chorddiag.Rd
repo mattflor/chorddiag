@@ -18,7 +18,7 @@ chorddiag(data, type = "directional", width = NULL, height = NULL,
   tickInterval = NULL, ticklabelFontsize = 10, fadeLevel = 0.1,
   showTooltips = TRUE, tooltipNames = NULL, tooltipUnit = NULL,
   tooltipFontsize = 12, tooltipGroupConnector = " &#x25B6; ",
-  precision = NULL)
+  precision = NULL, clickAction = NULL)
 }
 \arguments{
 \item{data}{A matrix containing the data. Must be square for the
@@ -109,6 +109,8 @@ triangle pointing from source to target.}
 
 \item{precision}{Integer number of significant digits to be used for tooltip
 display.}
+
+\item{clickAction}{character string containing JavaScript code to be executed on a mouse click so that shiny can get the sourceIndex and targetIndex for the purpose of filtering the data on other visualizations}
 }
 \description{
 Create an interactive chord diagram using the JavaScript visualization
