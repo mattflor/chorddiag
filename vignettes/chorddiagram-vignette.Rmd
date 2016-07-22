@@ -114,12 +114,12 @@ First, we create a contingency table of how many passengers from the different c
 
 ```{r, fig.width = 8, warning = FALSE, message = FALSE}
 library(dplyr)
-titanic_tbl <- dplyr::tbl_dt(Titanic)
+titanic_tbl <- dplyr::tbl_df(Titanic)
 titanic_tbl <- titanic_tbl %>%
     mutate_each(funs(factor), Class:Survived)
 by_class_survival <- titanic_tbl %>%
     group_by(Class, Survived) %>%
-    summarize(Count = sum(N))
+    summarize(Count = sum(n))
 titanic.mat <- matrix(by_class_survival$Count, nrow = 4, ncol = 2)
 dimnames(titanic.mat ) <- list(Class = levels(titanic_tbl$Class),
                                Survival = levels(titanic_tbl$Survived))
