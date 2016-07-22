@@ -59,3 +59,5 @@ You can track (and contribute to) development of `chorddiag` at <https://github.
 ``` r
 devtools::install_github("mattflor/chorddiag")
 ```
+
+If this fails to install the package vignette, try `devtools::install_github("mattflor/chorddiag", build_vignettes = TRUE)`.
