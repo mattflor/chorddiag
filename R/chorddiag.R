@@ -55,7 +55,9 @@
 #' @param ticklabelFontsize Numeric font size in pixels for the tick labels.
 #' @param fadeLevel Numeric chord fade level (opacity value between 0 and 1,
 #'   defaults to 0.1).
-#' @param showTooltips A logical scalar.
+#' @param showTooltips A logical scalar (defaults to TRUE).
+#' @param showZeroTooltips A logical scalar (defaults to TRUE). If set to FALSE,
+#'   tooltips for the value zero are hidden.
 #' @param tooltipNames A vector of character strings to be used for group
 #'   labeling in tooltips. By default equal to \code{groupNames}.
 #' @param tooltipUnit A character string for the units to be used in tooltips.
@@ -65,7 +67,8 @@
 #'   triangle pointing from source to target.
 #' @param precision Integer number of significant digits to be used for tooltip
 #'   display.
-#' @param clickAction character string containing JavaScript code to be executed on a mouse click so that shiny can get the sourceIndex and targetIndex for the purpose of filtering the data on other visualizations
+#' @param clickAction character string containing JavaScript code to be executed
+#'   on a mouse click so that shiny can get the sourceIndex and targetIndex for the purpose of filtering the data on other visualizations
 #'
 #' @source Based on \url{http://bl.ocks.org/mbostock/4062006} with several
 #'   modifications.
@@ -102,6 +105,7 @@ chorddiag <- function(data,
                       ticklabelFontsize = 10,
                       fadeLevel = 0.1,
                       showTooltips = TRUE,
+                      showZeroTooltips = TRUE,
                       tooltipNames = NULL,
                       tooltipUnit = NULL,
                       tooltipFontsize = 12,
@@ -204,6 +208,7 @@ chorddiag <- function(data,
                                  ticklabelFontsize = ticklabelFontsize,
                                  fadeLevel = fadeLevel,
                                  showTooltips = showTooltips,
+                                 showZeroTooltips = showZeroTooltips,
                                  tooltipNames = tooltipNames,
                                  tooltipFontsize = tooltipFontsize,
                                  tooltipUnit = tooltipUnit,
