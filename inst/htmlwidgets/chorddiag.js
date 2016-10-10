@@ -55,6 +55,7 @@ HTMLWidgets.widget({
         ticklabelFontsize = options.ticklabelFontsize,
         fadeLevel = options.fadeLevel,
         showTooltips = options.showTooltips,
+        showZeroTooltips = options.showZeroTooltips,
         tooltipNames = options.tooltipNames,
         tooltipFontsize = options.tooltipFontsize,
         tooltipUnit = options.tooltipUnit,
@@ -83,7 +84,11 @@ HTMLWidgets.widget({
                                  if (i == j) {
                                      return dir1;
                                  } else {
-                                     return dir1 + "</br>" + dir2;
+                                     if (showZeroTooltips) {
+                                         return dir1 + "</br>" + dir2;
+                                     } else {
+                                         return dir1 + (vji > 0 ? "</br>" + dir2 : "");
+                                     }
                                  }
                              } else if (type == "bipartite") {
                                  return dir2;
@@ -339,7 +344,7 @@ HTMLWidgets.widget({
         var mult = Math.pow(10, sig - Math.floor(Math.log(n) / Math.LN10) - 1);
         return Math.round(n * mult) / mult;
     }
-    
+
     function click(d) {
       return eval(options.clickAction);
     }
