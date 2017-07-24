@@ -1,4 +1,5 @@
 library(shiny)
+library(chorddiag)
 
 shinyUI(fluidPage(
     titlePanel("Hair Color Preferences"),
