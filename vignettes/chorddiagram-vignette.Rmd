@@ -116,7 +116,7 @@ First, we create a contingency table of how many passengers from the different c
 library(dplyr)
 titanic_tbl <- dplyr::tbl_df(Titanic)
 titanic_tbl <- titanic_tbl %>%
-    mutate_each(funs(factor), Class:Survived)
+    mutate_at(vars(Class:Survived), funs(factor))
 by_class_survival <- titanic_tbl %>%
     group_by(Class, Survived) %>%
     summarize(Count = sum(n))
