@@ -14,11 +14,11 @@ License: GPL (>= 3)
 LazyData: true
 Imports:
     htmlwidgets (>= 0.4),
-    RColorBrewer (>= 1.1-2)
-Enhances: knitr,
-    shiny
+    RColorBrewer (>= 1.1-2),
 Suggests:
     dplyr,
-    knitr
+    shiny,
+    knitr,
+    pander
 VignetteBuilder: knitr
 RoxygenNote: 6.0.1
