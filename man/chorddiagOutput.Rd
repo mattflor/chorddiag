@@ -6,6 +6,13 @@
 \usage{
 chorddiagOutput(outputId, width = "90\%", height = "350px")
 }
+\arguments{
+\item{outputId}{Shiny output variable to read from.}
+
+\item{width}{A valid CSS unit for the width of the chord diagram output.}
+
+\item{height}{A valid CSS unit for the height of the chord diagram output.}
+}
 \description{
 Widget output function for use in Shiny
 }

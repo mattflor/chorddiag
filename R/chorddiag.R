@@ -237,6 +237,9 @@ chorddiag <- function(data,
 
 #' Widget output function for use in Shiny
 #'
+#' @param outputId Shiny output variable to read from.
+#' @param width A valid CSS unit for the width of the chord diagram output.
+#' @param height A valid CSS unit for the height of the chord diagram output.
 #' @export
 chorddiagOutput <- function(outputId, width = '90%', height = '350px'){
     htmlwidgets::shinyWidgetOutput(outputId, 'chorddiag', width, height, package = 'chorddiag')
@@ -244,6 +247,9 @@ chorddiagOutput <- function(outputId, width = '90%', height = '350px'){
 
 #' Widget render function for use in Shiny
 #'
+#' @param expr An expression that generates a chord diagram.
+#' @param env The environment in which to evaluate \code{expr}.
+#' @param quoted Is \code{expr} quoted?
 #' @export
 renderChorddiag <- function(expr, env = parent.frame(), quoted = FALSE) {
     if (!quoted) { expr <- substitute(expr) } # force quoted

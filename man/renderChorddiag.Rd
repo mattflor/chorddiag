@@ -6,6 +6,13 @@
 \usage{
 renderChorddiag(expr, env = parent.frame(), quoted = FALSE)
 }
+\arguments{
+\item{expr}{An expression that generates a chord diagram.}
+
+\item{env}{The environment in which to evaluate \code{expr}.}
+
+\item{quoted}{Is \code{expr} quoted?}
+}
 \description{
 Widget render function for use in Shiny
 }
