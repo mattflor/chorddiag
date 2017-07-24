@@ -21,10 +21,16 @@ shinyServer(function(input, output) {
                   showTicks = input$showTicks,
                   margin = input$margin,
                   clickAction = "Shiny.onInputChange('sourceIndex', d.source.index+1);
-                                Shiny.onInputChange('targetIndex', d.target.index+1);")
+                                 Shiny.onInputChange('targetIndex', d.target.index+1);",
+                  clickGroupAction = "Shiny.onInputChange('groupIndex', d.index+1);")
     )
-    
+
     output$shiny_return <- renderPrint({
-        paste0(groupNames[input$sourceIndex], " <-> ", groupNames[input$targetIndex])
+        paste0("Clicked chord: ", groupNames[input$sourceIndex], " <-> ", groupNames[input$targetIndex])
     })
+
+    output$shiny_return2 <- renderPrint({
+        paste0("Clicked group: ", groupNames[input$groupIndex])
+    })
+
 })

@@ -60,7 +60,9 @@ HTMLWidgets.widget({
         tooltipFontsize = options.tooltipFontsize,
         tooltipUnit = options.tooltipUnit,
         tooltipGroupConnector = options.tooltipGroupConnector,
-        precision = options.precision;
+        precision = options.precision,
+        clickAction = options.clickAction,
+        clickGroupAction = options.clickGroupAction;
 
     d3.select(el).selectAll("div.d3-tip").remove();
 
@@ -155,7 +157,8 @@ HTMLWidgets.widget({
           .on("mouseout", function(d) {
               if (showTooltips) groupTip.hide(d);
               return groupFade(d, 1);
-          });
+          })
+          .on("click", clickGroup);
 
     if (groupedgeColor) {
         groups.style("stroke", groupedgeColor);
@@ -346,7 +349,11 @@ HTMLWidgets.widget({
     }
 
     function click(d) {
-      return eval(options.clickAction);
+      return eval(clickAction);
+    }
+
+    function clickGroup(d) {
+        return eval(clickGroupAction)
     }
 
   }  // end renderValue function

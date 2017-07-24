@@ -19,7 +19,7 @@ chorddiag(data, type = "directional", width = NULL, height = NULL,
   showTooltips = TRUE, showZeroTooltips = TRUE, tooltipNames = NULL,
   tooltipUnit = NULL, tooltipFontsize = 12,
   tooltipGroupConnector = " &#x25B6; ", precision = NULL,
-  clickAction = NULL)
+  clickAction = NULL, clickGroupAction = NULL)
 }
 \arguments{
 \item{data}{A matrix containing the data. Must be square for the
@@ -115,7 +115,11 @@ triangle pointing from source to target.}
 display.}
 
 \item{clickAction}{character string containing JavaScript code to be executed
-on a mouse click so that shiny can get the sourceIndex and targetIndex for the purpose of filtering the data on other visualizations}
+on a mouse click so that shiny can get the sourceIndex and targetIndex for the
+purpose of filtering the data on other visualizations}
+
+\item{clickGroupAction}{character string containing JavaScript code to be executed
+on a mouse click so that shiny can get the groupIndex}
 }
 \description{
 Create an interactive chord diagram using the JavaScript visualization

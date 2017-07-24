@@ -13,7 +13,8 @@ shinyUI(fluidPage(
 
         mainPanel(
             chorddiagOutput('chorddiag', height = '600px'),
-            verbatimTextOutput("shiny_return")
+            verbatimTextOutput("shiny_return"),
+            verbatimTextOutput("shiny_return2")
         )
     )
 ))
