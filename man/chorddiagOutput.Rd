@@ -9,4 +9,3 @@ chorddiagOutput(outputId, width = "90\%", height = "350px")
 \description{
 Widget output function for use in Shiny
 }
-
