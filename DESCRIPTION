@@ -1,6 +1,6 @@
 Package: chorddiag
 Title: Interactive Chord Diagrams
-Version: 0.1.2
+Version: 0.1.2.9000
 Authors@R: c(
     person("Matthias", "Flor", email = "matthias.c.flor@gmail.com", role = c("aut", "cre")),
     person("Elizabeth", "Tang", email = "eliz.thf@gmail.com", role = "ctb"))

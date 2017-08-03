@@ -46,6 +46,7 @@ HTMLWidgets.widget({
         groupnamePadding = options.groupnamePadding,
         groupnameFontsize = options.groupnameFontsize,
         groupedgeColor = options.groupedgeColor,
+        chordColors = options.chordColors,
         chordedgeColor = options.chordedgeColor,
         categoryNames = options.categoryNames,
         categorynamePadding = options.categorynamePadding,
@@ -213,8 +214,13 @@ HTMLWidgets.widget({
                     .attr("d", d3.svg.chord().radius(innerRadius));
 
     // style chords and define mouse events
-    chords.style("fill", function(d) { return fillScale(d.target.index); })
-          .style("stroke", chordedgeColor)
+    if (chordColors) {
+        chords.style("fill", function(d) { return chordColors[d.source.index][d.target.index]; })
+    } else {
+        chords.style("fill", function(d) { return fillScale(d.target.index); })
+    }
+
+    chords.style("stroke", chordedgeColor)
           .style("fill-opacity", 0.67)
           .style("stroke-width", "0.5px")
           .style("opacity", 1)
