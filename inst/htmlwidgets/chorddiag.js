@@ -9,7 +9,7 @@ HTMLWidgets.widget({
                  .attr("width", width)
                  .attr("height", height);
 
-    return d3.layout.chord();
+    return d3.chord();
 
   },
 
@@ -113,16 +113,15 @@ HTMLWidgets.widget({
     svgContainer.selectAll("*").remove();
 
     // apply chord settings and data
-    chord.padding(groupPadding)
-         .sortSubgroups(d3.descending)
-         .matrix(matrix);
+    chord = chord.padAngle(groupPadding)
+                 .sortSubgroups(d3.descending)(matrix);
 
     // calculate outer and inner radius for chord diagram
     var outerRadius = (d - 2 * margin) / 2,
         innerRadius = outerRadius * (1 - groupThickness);
 
     // create ordinal color fill scale from groupColors
-    var fillScale = d3.scale.ordinal()
+    var fillScale = d3.scaleOrdinal()
                             .domain(d3.range(matrix.length))
                             .range(groupColors);
 
@@ -149,7 +148,7 @@ HTMLWidgets.widget({
     // style groups and define mouse events
     groups.style("fill", function(d) { return fillScale(d.index); })
           .style("stroke", function(d) { return fillScale(d.index); })
-          .attr("d", d3.svg.arc().innerRadius(innerRadius).outerRadius(outerRadius))
+          .attr("d", d3.arc().innerRadius(innerRadius).outerRadius(outerRadius))
           .on("mouseover", function(d) {
               if (showTooltips) groupTip.show(d);
               return groupFade(d, fadeLevel);
@@ -205,12 +204,12 @@ HTMLWidgets.widget({
     // create chords
     var chords = svg.append("g").attr("class", "chords")
                     .selectAll("path")
-                    .data(chord.chords)
+                    .data(chord)
                     .enter().append("path").attr("id", function(d, i) {
                         return "chord-" + groupNames[d.source.index]
                                + "-" + groupNames[d.target.index];
                     })
-                    .attr("d", d3.svg.chord().radius(innerRadius));
+                    .attr("d", d3.ribbon().radius(innerRadius));
 
     // style chords and define mouse events
     chords.style("fill", function(d) { return fillScale(d.target.index); })
