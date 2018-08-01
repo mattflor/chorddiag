@@ -71,7 +71,7 @@ HTMLWidgets.widget({
                          .attr('class', 'd3-tip')
                          .style("font-size", tooltipFontsize + "px")
                          .style("font-family", "sans-serif")
-                         .direction('mt')
+                         .direction('n')
                          .offset([10, 10])
                          .html(function(d) {
                              // indexes
@@ -101,7 +101,7 @@ HTMLWidgets.widget({
                          .attr('class', 'd3-tip')
                          .style("font-size", tooltipFontsize + "px")
                          .style("font-family", "sans-serif")
-                         .direction('mt')
+                         .direction('n')
                          .offset([10, 10])
                          .html(function(d) {
                              var value = sigFigs(d.value, precision);
@@ -150,7 +150,7 @@ HTMLWidgets.widget({
           .style("stroke", function(d) { return fillScale(d.index); })
           .attr("d", d3.arc().innerRadius(innerRadius).outerRadius(outerRadius))
           .on("mouseover", function(d) {
-              if (showTooltips) groupTip.show(d);
+              if (showTooltips) groupTip.show(d,this);
               return groupFade(d, fadeLevel);
           })
           .on("mouseout", function(d) {
@@ -218,7 +218,7 @@ HTMLWidgets.widget({
           .style("stroke-width", "0.5px")
           .style("opacity", 1)
           .on("mouseover", function(d) {
-              if (showTooltips) chordTip.show(d);
+              if (showTooltips) chordTip.show(d, this);
               return chordFade(d, fadeLevel);
           })
           .on("mouseout", function(d) {
