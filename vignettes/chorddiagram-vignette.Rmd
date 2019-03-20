@@ -120,9 +120,9 @@ titanic_tbl <- titanic_tbl %>%
 by_class_survival <- titanic_tbl %>%
     group_by(Class, Survived) %>%
     summarize(Count = sum(n))
-titanic.mat <- matrix(by_class_survival$Count, nrow = 4, ncol = 2)
-dimnames(titanic.mat ) <- list(Class = levels(titanic_tbl$Class),
-                               Survival = levels(titanic_tbl$Survived))
+titanic.mat <- matrix(by_class_survival$Count, nrow = 2, ncol = 4)
+dimnames(titanic.mat ) <- list(Survival = levels(titanic_tbl$Survived),
+                               Class = levels(titanic_tbl$Class))
 print(titanic.mat)
 ```
 
@@ -138,7 +138,7 @@ pander::pandoc.table(titanic.mat,
 We can create a "bipartite" chord diagram for this matrix by setting `type = "bipartite"`.
 
 ```{r, eval = FALSE}
-groupColors <- c("#2171b5", "#6baed6", "#bdd7e7", "#bababa", "#d7191c", "#1a9641")
+groupColors <- c("#d7191c", "#1a9641", "#2171b5", "#6baed6", "#bdd7e7", "#bababa")
 chorddiag(titanic.mat, type = "bipartite", 
           groupColors = groupColors,
           tickInterval = 50)
