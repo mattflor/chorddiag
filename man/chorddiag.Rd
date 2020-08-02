@@ -8,18 +8,40 @@ Based on \url{http://bl.ocks.org/mbostock/4062006} with several
   modifications.
 }
 \usage{
-chorddiag(data, type = "directional", width = NULL, height = NULL,
-  margin = 100, palette = "Dark2", palette2 = "Greys",
-  showGroupnames = TRUE, groupNames = NULL, groupColors = NULL,
-  groupThickness = 0.1, groupPadding = 2, groupnamePadding = 30,
-  groupnameFontsize = 18, groupedgeColor = NULL,
-  chordedgeColor = "#808080", categoryNames = NULL,
-  categorynamePadding = 100, categorynameFontsize = 28, showTicks = TRUE,
-  tickInterval = NULL, ticklabelFontsize = 10, fadeLevel = 0.1,
-  showTooltips = TRUE, showZeroTooltips = TRUE, tooltipNames = NULL,
-  tooltipUnit = NULL, tooltipFontsize = 12,
-  tooltipGroupConnector = " &#x25B6; ", precision = NULL,
-  clickAction = NULL, clickGroupAction = NULL)
+chorddiag(
+  data,
+  type = "directional",
+  width = NULL,
+  height = NULL,
+  margin = 100,
+  palette = "Dark2",
+  palette2 = "Greys",
+  showGroupnames = TRUE,
+  groupNames = NULL,
+  groupColors = NULL,
+  groupThickness = 0.1,
+  groupPadding = 2,
+  groupnamePadding = 30,
+  groupnameFontsize = 18,
+  groupedgeColor = NULL,
+  chordedgeColor = "#808080",
+  categoryNames = NULL,
+  categorynamePadding = 100,
+  categorynameFontsize = 28,
+  showTicks = TRUE,
+  tickInterval = NULL,
+  ticklabelFontsize = 10,
+  fadeLevel = 0.1,
+  showTooltips = TRUE,
+  showZeroTooltips = TRUE,
+  tooltipNames = NULL,
+  tooltipUnit = NULL,
+  tooltipFontsize = 12,
+  tooltipGroupConnector = " &#x25B6; ",
+  precision = NULL,
+  clickAction = NULL,
+  clickGroupAction = NULL
+)
 }
 \arguments{
 \item{data}{A matrix containing the data. Must be square for the

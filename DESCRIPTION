@@ -7,18 +7,21 @@ Authors@R: c(
 Description: Interactive Chord Diagrams via the D3 JavaScript library
     Based on http://bl.ocks.org/mbostock/4062006 with some modifications
     (fading) and additions (tooltips, bipartite diagram type).
-URL: http://github.com/mattflor/chorddiag/
+URL: https://github.com/mattflor/chorddiag/
+BugReports: https://github.com/mattflor/chorddiag/issues
 Depends:
     R (>= 3.2.0)
 License: GPL (>= 3)
 LazyData: true
 Imports:
     htmlwidgets (>= 0.4),
-    RColorBrewer (>= 1.1-2),
+    RColorBrewer (>= 1.1-2)
 Suggests:
     dplyr,
-    shiny,
     knitr,
-    pander
+    pander,
+    shiny,
+    tibble
 VignetteBuilder: knitr
-RoxygenNote: 6.0.1
+RoxygenNote: 7.1.1
+Encoding: UTF-8
