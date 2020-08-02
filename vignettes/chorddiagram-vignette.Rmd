@@ -120,7 +120,7 @@ titanic_tbl <- titanic_tbl %>%
 by_class_survival <- titanic_tbl %>%
     group_by(Class, Survived) %>%
     summarize(Count = sum(n))
-titanic.mat <- matrix(by_class_survival$Count, nrow = 4, ncol = 2)
+titanic.mat <- matrix(by_class_survival$Count, nrow = 4, ncol = 2, byrow = TRUE)
 dimnames(titanic.mat ) <- list(Class = levels(titanic_tbl$Class),
                                Survival = levels(titanic_tbl$Survived))
 print(titanic.mat)
