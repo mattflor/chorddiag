@@ -109,12 +109,6 @@ Fading levels can be set, and tooltip layout can be customized to some degree as
 ![Tooltip and chord fading showcase for the hair color preference chord diagram. In this case, we can see that a considerable fraction of blonde people prefer red-haired dating partners whereas only a small fraction of red-haired people prefer blonde partners.](images/chorddiagram-directional-hair-tooltip.png)
 
 
-## Uber Rides
-
-
-http://bost.ocks.org/mike/uberdata/
-
-
 ## Titanic Survival (Bipartite Chord Diagram)
 
 The default chord diagram type is **directional**, allowing for visualization of asymmetric relationships.
