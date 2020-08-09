@@ -8,7 +8,7 @@ dependencies:
     src: htmlwidgets/lib/d3-tip
     script: index.js
   - name: chorddiag
-    version: 0.0.0.9000
+    version: 0.1.2.9000
     src: htmlwidgets
     script: chorddiag.js
     stylesheet: chorddiag.css
