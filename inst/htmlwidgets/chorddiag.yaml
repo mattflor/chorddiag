@@ -9,6 +9,6 @@ dependencies:
     script: index.js
   - name: chorddiag
     version: 0.1.2.9000
-    src: htmlwidgets
+    src: htmlwidgets/lib/chorddiag
     script: chorddiag.js
     stylesheet: chorddiag.css
