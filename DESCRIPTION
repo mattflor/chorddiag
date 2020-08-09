@@ -20,7 +20,6 @@ Imports:
 Suggests:
     dplyr,
     knitr,
-    pander,
     shiny,
     tibble
 VignetteBuilder: knitr

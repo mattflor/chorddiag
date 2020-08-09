@@ -20,10 +20,6 @@ if (!requireNamespace("dplyr", quietly = TRUE)) {
     stop("Package \"dplyr\" needed to build the vignette. Please install it.",
       call. = FALSE)
 }
-if (!requireNamespace("pander", quietly = TRUE)) {
-    stop("Package \"pander\" needed to build the vignette. Please install it.",
-      call. = FALSE)
-}
 ```
 
 
@@ -78,11 +74,6 @@ dimnames(m) <- list(have = haircolors,
 print(m)
 ```
 
-```{r, echo = FALSE, results = 'asis'}
-pander::pandoc.table(m, style = "rmarkdown",
-                     caption = "Hair color preference data. Row names show what hair color people have, and column names show what hair color they prefer for a dating partner.")
-```
-
 Then, we can pass this matrix to the `chorddiag` function to create the chord diagram:
 
 ```{r, eval = FALSE, fig.width = 8}
@@ -135,12 +126,6 @@ print(titanic.mat)
 
 Note that we labeled the dimensions of the matrix by assigning a named list to `dimnames`.
 The dimension labels (here: "Class" and "Survival") will automatically be used in the chord diagram.
-
-```{r, echo = FALSE, results = 'asis'}
-pander::pandoc.table(titanic.mat, 
-                     type = "rmarkdown",
-                     caption = "Titanic data. Counts of people who died ('No') or survived ('Yes') grouped by membership to passenger class and crew.")
-```
 
 We can create a "bipartite" chord diagram for this matrix by setting `type = "bipartite"`.
 

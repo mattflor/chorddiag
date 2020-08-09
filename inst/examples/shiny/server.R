@@ -1,3 +1,7 @@
+if (!requireNamespace("shiny", quietly = TRUE)) {
+    stop("Package \"shiny\" needed to run the example app. Please install it.",
+         call. = FALSE)
+}
 library(shiny)
 library(chorddiag)
 
