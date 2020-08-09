@@ -5,3 +5,5 @@
 ^example\.html$
 .bowerrc
 .bower.json
+^doc$
+^Meta$

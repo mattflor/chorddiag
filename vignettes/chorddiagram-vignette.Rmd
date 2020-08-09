@@ -15,6 +15,18 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
+```{r, include = FALSE}
+if (!requireNamespace("dplyr", quietly = TRUE)) {
+    stop("Package \"dplyr\" needed to build the vignette. Please install it.",
+      call. = FALSE)
+}
+if (!requireNamespace("pander", quietly = TRUE)) {
+    stop("Package \"pander\" needed to build the vignette. Please install it.",
+      call. = FALSE)
+}
+```
+
+
 # Introduction
 
 The `chorddiag` package allows to create interactive chord diagrams using the JavaScript visualization library D3 (http://d3js.org) from within R via the `htmlwidgets` interfacing framework.
@@ -97,12 +109,6 @@ Fading levels can be set, and tooltip layout can be customized to some degree as
 ![Tooltip and chord fading showcase for the hair color preference chord diagram. In this case, we can see that a considerable fraction of blonde people prefer red-haired dating partners whereas only a small fraction of red-haired people prefer blonde partners.](images/chorddiagram-directional-hair-tooltip.png)
 
 
-## Uber Rides
-
-
-http://bost.ocks.org/mike/uberdata/
-
-
 ## Titanic Survival (Bipartite Chord Diagram)
 
 The default chord diagram type is **directional**, allowing for visualization of asymmetric relationships.
@@ -114,13 +120,14 @@ First, we create a contingency table of how many passengers from the different c
 
 ```{r, fig.width = 8, warning = FALSE, message = FALSE}
 library(dplyr)
-titanic_tbl <- dplyr::tbl_df(Titanic)
+titanic_tbl <- tibble::as_tibble(Titanic)
 titanic_tbl <- titanic_tbl %>%
-    mutate_at(vars(Class:Survived), funs(factor))
+    mutate(across(where(is.character), as.factor))
 by_class_survival <- titanic_tbl %>%
     group_by(Class, Survived) %>%
-    summarize(Count = sum(n))
-titanic.mat <- matrix(by_class_survival$Count, nrow = 4, ncol = 2)
+    summarise(Count = sum(n)) %>% 
+    ungroup()
+titanic.mat <- matrix(by_class_survival$Count, nrow = 4, ncol = 2, byrow = TRUE)
 dimnames(titanic.mat ) <- list(Class = levels(titanic_tbl$Class),
                                Survival = levels(titanic_tbl$Survived))
 print(titanic.mat)
